@@ -5,7 +5,11 @@
   {mod, { ddb_proxy_app, []}},
   {applications,
    [kernel,
-    stdlib
+    stdlib,
+    ranch,
+    dqe_idx,
+    dqe_idx_pg,
+    ddb_client
    ]},
   {env,[]},
   {modules, []},
