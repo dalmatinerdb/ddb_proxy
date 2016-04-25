@@ -21,7 +21,8 @@
 
 start_link() ->
     R = supervisor:start_link({local, ?SERVER}, ?MODULE, []),
-    Listeners = [{dp_metrics2, <<"bucket">>, 5555}],
+    Dflt = [{dp_metrics2, <<"bucket">>, 5555}],
+    Listeners = applicaiton:get_env(ddb_proxy, listeners, Dflt),
     [dp_decoder:listener(L) || L <- Listeners],
     R.
 
