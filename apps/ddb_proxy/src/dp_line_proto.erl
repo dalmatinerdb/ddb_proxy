@@ -22,7 +22,10 @@ loop(Socket, Transport, Acc, State) ->
             Acc1 = <<Data/binary, Acc/binary>>,
             {Acc2, State1} = fold_lines(Acc1, <<>>, State),
             loop(Socket, Transport, Acc2, State1);
+        {error, timeout} ->
+            loop(Socket, Transport, Acc, State);
         _ ->
+
             ok = Transport:close(Socket)
     end.
 
@@ -51,10 +54,8 @@ decode_metric(Line,  State = #{bucket := Bucket, decoder := Decoder,
     State1 = State#{ddb => C1},
     case gb_sets:is_element(KeyBin, Seen) of
         true ->
-            io:format("we know: ~p", [Metric]),
             State1;
         false ->
             dqe_idx:add(Bucket, MetricBin, Bucket, KeyBin, Tags),
-            io:format("New: ~p~n", [Decoded1]),
             State1#{seen => gb_sets:add_element(MetricBin, Seen)}
     end.

@@ -21,8 +21,9 @@
 
 start_link() ->
     R = supervisor:start_link({local, ?SERVER}, ?MODULE, []),
-    Dflt = [{dp_metrics2, <<"bucket">>, 5555}],
-    Listeners = applicaiton:get_env(ddb_proxy, listeners, Dflt),
+    {ok, Listeners} = application:get_env(ddb_proxy, listeners),
+    {ok, Db} = application:get_env(ddb_proxy, db),
+    pgapp:connect(Db),
     [dp_decoder:listener(L) || L <- Listeners],
     R.
 

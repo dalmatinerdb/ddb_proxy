@@ -88,7 +88,7 @@ parse_tag(<<C, R/binary>>, K) ->
                             db_decoder:metric().
 parse_time(<<" ", T/binary>>, V,
            M = #{key := Key, metric := Metric}) ->
-    Vi = binary_to_integer(V),
+    Vi = dp_decoder:to_number(V),
     Ti = binary_to_integer(T),
     M#{time := Ti, value := Vi,
        metric := case Metric of 
