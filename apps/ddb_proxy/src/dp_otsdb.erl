@@ -22,8 +22,9 @@ parse(<<"put ", In/binary>>) ->
 parse_metric(<<" ", R/binary>>, Part,
              M = #{key := Ks}) ->
     Ks1 = [Part | Ks],
-    M1 = M#{metric := lists:reverse(Ks1),
-            key := Ks1},
+    Ks2 = lists:reverse(Ks1),
+    M1 = M#{metric := Ks2,
+            key := Ks2},
     parse_time(R, <<>>, M1);
 
 parse_metric(<<".", R/binary>>, Part,
@@ -52,9 +53,11 @@ parse_value(<<C, R/binary>>, Part, M) ->
     parse_value(R, <<Part/binary, C>>, M).
 
 
-parse_tags(<<>>, Tag, M = #{tags := Tags}) ->
+parse_tags(<<>>, Tag, M = #{tags := Tags, key := Ks}) ->
     {K, V} = parse_tag(Tag, <<>>),
-    M#{tags := lists:sort([{<<"">>, K, V} | Tags])};
+    Tags1 = lists:sort([{<<"">>, K, V} | Tags]),
+    M#{key := Ks ++ recombine_tags(Tags1),
+       tags := Tags1};
 
 parse_tags(<<" ", R/binary>>, Tag, M = #{tags := Tags}) ->
     {K, V} = parse_tag(Tag, <<>>),
@@ -69,10 +72,8 @@ parse_tag(<<"=", V/binary>>, K) ->
 parse_tag(<<C, R/binary>>, K) ->
     parse_tag(R, <<K/binary, C>>).
 
-
-
-
-
+recombine_tags(Tags) ->
+    [<<K/binary, "=", V/binary>> || {_,K,V} <- Tags].
 
 -ifdef(TEST).
 
@@ -87,11 +88,13 @@ example_test() ->
     Value = 43, %% note we round here, since we don't have floats :(
     #{
        metric := RMetric,
-       tags := RTags,
-       time := RTime,
-       value := RValue
+       key    := RKey,
+       tags   := RTags,
+       time   := RTime,
+       value  := RValue
      } = parse(In),
     ?assertEqual(Metric, RMetric),
+    ?assertEqual(Key, RKey),
     ?assertEqual(Tags, RTags),
     ?assertEqual(Time, RTime),
     ?assertEqual(Value, RValue).
