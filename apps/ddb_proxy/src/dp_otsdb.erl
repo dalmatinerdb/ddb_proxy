@@ -5,7 +5,7 @@
 -include_lib("eunit/include/eunit.hrl").
 -endif.
 
--export([parse/1]).
+-export([protocol/0, parse/1]).
 
 -spec parse(In::binary()) ->
                    dp_decoder:metric().
@@ -18,6 +18,10 @@ parse(<<"put ", In/binary>>) ->
       value => 0
      },
     parse_metric(In, <<>>, M).
+
+-spec protocol() -> dp_line_proto.
+protocol() ->
+    dp_line_proto.
 
 parse_metric(<<" ", R/binary>>, Part,
              M = #{key := Ks}) ->

@@ -5,7 +5,7 @@
 -include_lib("eunit/include/eunit.hrl").
 -endif.
 
--export([parse/1]).
+-export([protocol/0, parse/1]).
 
 -spec parse(In::binary()) ->
                    dp_decoder:metric().
@@ -19,6 +19,9 @@ parse(In) ->
      },
     parse_key(In, <<>>, M).
 
+-spec protocol() -> dp_line_proto.
+protocol() ->
+    dp_line_proto.
 
 -spec parse_key(binary(), binary(), db_decoder:metric()) ->
                        db_decoder:metric().

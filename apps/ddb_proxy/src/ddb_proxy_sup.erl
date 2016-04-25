@@ -21,10 +21,8 @@
 
 start_link() ->
     R = supervisor:start_link({local, ?SERVER}, ?MODULE, []),
-    {ok, _} = ranch:start_listener(dp_metrics2, 100,
-                                   ranch_tcp, [{port, 5555}],
-                                   dp_line_proto, #{bucket => <<"bucket">>,
-                                                    decoder => dp_metrics2}),
+    Listeners = [{dp_metrics2, <<"bucket">>, 5555}],
+    [dp_decoder:listener(L) || L <- Listeners],
     R.
 
 %%====================================================================
