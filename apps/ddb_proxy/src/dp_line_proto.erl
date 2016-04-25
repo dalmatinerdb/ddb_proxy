@@ -43,19 +43,18 @@ decode_metric(Line,  State = #{bucket := Bucket, decoder := Decoder,
     Decoded = Decoder:parse(Line),
     Decoded1 = dp_util:expand_tags(Decoded),
     #{ metric := Metric, time := Time,
-       value := Value, tags := Tags} = Decoded1,
+       key := Key, value := Value, tags := Tags} = Decoded1,
+    KeyBin = dproto:metric_from_list(Key),
     MetricBin = dproto:metric_from_list(Metric),
     Points = mmath_bin:from_list([Value]),
-    C1 = dp_util:ddb_c(ddb_tcp:send(Metric, Time, Points, C)),
+    C1 = dp_util:ddb_c(ddb_tcp:send(KeyBin, Time, Points, C)),
     State1 = State#{ddb => C1},
-    %% TODO: store!
-    case gb_sets:is_element(MetricBin, Seen) of
+    case gb_sets:is_element(KeyBin, Seen) of
         true ->
             io:format("we know: ~p", [Metric]),
             State1;
         false ->
-            dqe_idx:add(Bucket, <<"metric">>, Bucket, MetricBin, Tags),
+            dqe_idx:add(Bucket, MetricBin, Bucket, KeyBin, Tags),
             io:format("New: ~p~n", [Decoded1]),
-            %% TODO: Store metrics
             State1#{seen => gb_sets:add_element(MetricBin, Seen)}
     end.
