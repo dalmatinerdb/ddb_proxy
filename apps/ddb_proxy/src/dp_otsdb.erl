@@ -45,8 +45,8 @@ parse_time(<<C, R/binary>>, Part, M) ->
     parse_time(R, <<Part/binary, C>>, M).
 
 parse_value(<<" ", R/binary>>, V, M) ->
-    Vi = binary_to_float(V),
-    M1 = M#{value := round(Vi)},
+    Vi = dp_decoder:to_number(V),
+    M1 = M#{value := Vi},
     parse_tags(R, <<>>, M1);
 
 parse_value(<<C, R/binary>>, Part, M) ->
@@ -56,7 +56,7 @@ parse_value(<<C, R/binary>>, Part, M) ->
 parse_tags(<<>>, Tag, M = #{tags := Tags, key := Ks}) ->
     {K, V} = parse_tag(Tag, <<>>),
     Tags1 = lists:sort([{<<"">>, K, V} | Tags]),
-    M#{key := Ks ++ recombine_tags(Tags1),
+    M#{key := Ks ++ dp_decoder:recombine_tags(Tags1),
        tags := Tags1};
 
 parse_tags(<<" ", R/binary>>, Tag, M = #{tags := Tags}) ->
@@ -71,9 +71,6 @@ parse_tag(<<"=", V/binary>>, K) ->
     {K, V};
 parse_tag(<<C, R/binary>>, K) ->
     parse_tag(R, <<K/binary, C>>).
-
-recombine_tags(Tags) ->
-    [<<K/binary, "=", V/binary>> || {_,K,V} <- Tags].
 
 -ifdef(TEST).
 
