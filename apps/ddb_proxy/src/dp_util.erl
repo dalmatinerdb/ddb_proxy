@@ -2,7 +2,7 @@
 
 -export([expand_tags/1, ddb_config/0, ddb_c/1]).
 
-expand_tags(M = #{tags := Tags, metric := Metric}) ->
+expand_tags(M = #{tags := Tags, key := Metric}) ->
     L = {<<"ddb">>, <<"key_length">>,
          integer_to_binary(length(Metric))},
     M#{tags => add_tags(1, Metric, [L | Tags])}.

@@ -7,6 +7,8 @@
    [kernel,
     stdlib,
     ranch,
+    hackney,
+    dp_decoder,
     dqe_idx,
     dqe_idx_pg,
     ddb_client

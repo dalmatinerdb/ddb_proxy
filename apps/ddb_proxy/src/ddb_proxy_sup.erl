@@ -19,12 +19,31 @@
 %% API functions
 %%====================================================================
 
+listener_name({Decoder, Bucket, Port}) ->
+    DecoderB = atom_to_binary(Decoder, utf8),
+    PortB = integer_to_binary(Port),
+    BName = <<DecoderB/binary, "_", Bucket/binary, "_", PortB/binary>>,
+    binary_to_atom(BName, utf8).
+
+listener({Decoder, Bucket, Port} = L)
+  when is_atom(Decoder),
+       is_binary(Bucket),
+       is_integer(Port),
+       Port > 0 ->
+    Name  = listener_name(L),
+    Proto = dp_line_proto,
+    State = #{bucket => Bucket, decoder => Decoder},
+    {ok, _} = ranch:start_listener(Name, 100,
+                                   ranch_tcp, [{port, Port}],
+                                   Proto, State),
+    ok.
+
 start_link() ->
     R = supervisor:start_link({local, ?SERVER}, ?MODULE, []),
     {ok, Listeners} = application:get_env(ddb_proxy, listeners),
     {ok, Db} = application:get_env(ddb_proxy, db),
     pgapp:connect(Db),
-    [dp_decoder:listener(L) || L <- Listeners],
+    [listener(L) || L <- Listeners],
     R.
 
 %%====================================================================
@@ -33,7 +52,13 @@ start_link() ->
 
 %% Child :: {Id,StartFunc,Restart,Shutdown,Type,Modules}
 init([]) ->
-    {ok, { {one_for_all, 0, 1}, []} }.
+    Restart = permanent,
+    Shutdown = 2000,
+    Type = supervisor,
+    C = {ddb_proxy_prom_sup,
+         {ddb_proxy_prom_sup, start_link, []},
+         Restart, Shutdown, Type, [ddb_proxy_prom_sup]},
+    {ok, { {one_for_all, 0, 1}, [C]} }.
 
 %%====================================================================
 %% Internal functions
