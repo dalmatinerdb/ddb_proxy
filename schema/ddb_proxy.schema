@@ -1,0 +1,69 @@
+%% -*- erlang -*-
+
+%% @doc The path data gets stored into.
+{mapping, "run_user_home", "setup.home",
+ [{default, "{{run_user_home}}"},
+  {datatype, string}]}.
+
+%% @doc The TCP endpoint for the backend server.
+{mapping, "ddb_connection.backend_server", "ddb_proxy.backend",
+ [{default, {"127.0.0.1", 5555}},
+  {datatype, ip}]}.
+
+{mapping, "prometheus_scrapers.$name.bucket", "ddb_proxy.prom_scrapers",
+ [{datatype, string},
+  {default, "{{prometheus_default_bucket}}"},
+  {commented, "{{prometheus_default_bucket}}"},
+  {include_default, "node_exporter"}]}.
+
+{mapping, "prometheus_scrapers.$name.url", "ddb_proxy.prom_scrapers",
+ [{datatype, string},
+  {default, "{{prometheus_default_url}}"},
+  {commented, "{{prometheus_default_url}}"},
+  {include_default, "node_exporter"}]}.
+
+{mapping, "prometheus_scrapers.$name.frequency", "ddb_proxy.prom_scrapers",
+ [{datatype, integer},
+  {default, {{prometheus_default_frequency}}},
+  {commented, {{prometheus_default_frequency}}},
+  {include_default, "node_exporter"}]}.
+
+{translation, "ddb_proxy.prom_scrapers",
+fun(Conf) ->
+    ScraperList = cuttlefish_variable:filter_by_prefix("prometheus_scrapers", Conf),
+    Names = [ Name || {[_, Name, _], _} <- ScraperList],
+    Scrapers = [begin
+         Bucket =
+            cuttlefish:conf_get(["prometheus_scrapers", Name, "bucket"], Conf),
+         Url =
+            cuttlefish:conf_get(["prometheus_scrapers", Name, "url"], Conf),
+         Frequency =
+            cuttlefish:conf_get(["prometheus_scrapers", Name, "frequency"], Conf),
+        {list_to_atom(Name), list_to_binary(Bucket), Url, Frequency}
+    end || Name <- Names],
+    lists:usort(Scrapers)
+end}.
+
+{mapping, "listeners.$decoder.bucket", "ddb_proxy.listeners",
+ [{datatype, string},
+  {default, "{{listeners_default_bucket}}"},
+  {include_default, "{{listeners_default_decoder}}"}]}.
+
+{mapping, "listeners.$decoder.port", "ddb_proxy.listeners",
+ [{datatype, integer},
+  {default, "{{listeners_default_port}}"},
+  {include_default, "{{listeners_default_decoder}}"}]}.
+
+{translation, "ddb_proxy.listeners",
+fun(Conf) ->
+    ListenerList = cuttlefish_variable:filter_by_prefix("listeners", Conf),
+    Names = [ Name || {[_, Name, _], _} <- ListenerList],
+    Listeners = [begin
+         Bucket =
+            cuttlefish:conf_get(["listeners", Name, "bucket"], Conf),
+         Port =
+            cuttlefish:conf_get(["listeners", Name, "port"], Conf),
+         {list_to_atom(Name), list_to_binary(Bucket), Port}
+    end || Name <- Names],
+    lists:usort(Listeners)
+end}.

@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Sort out file permissions
+if [[ $(id dalmatiner 2>/dev/null) ]] ;then
+    chown -R dalmatiner:dalmatiner /var/lib/ddb_proxy
+    chown -R dalmatiner:dalmatiner /var/log/ddb_proxy
+fi
+
+CONFFILE=/etc/ddb_proxy/ddb_proxy.conf
+
+cp ${CONFFILE}.example ${CONFFILE}
+sed -i -e "s/dqe_idx_ddb/dqe_idx_pg/g" ${CONFFILE}

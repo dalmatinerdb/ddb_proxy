@@ -6,7 +6,7 @@
 %%% @end
 %%% Created :  7 Jun 2016 by Heinz Nikolaus Gies <heinz@licenser.net>
 %%%-------------------------------------------------------------------
--module(dqe_proxy_prom_scrapper).
+-module(dqe_proxy_prom_scraper).
 
 -behaviour(gen_server).
 
@@ -55,9 +55,9 @@ start_link(Name, Bucket, URL, Freq) ->
 %% @end
 %%--------------------------------------------------------------------
 init([Name, Bucket, URL, Freq]) ->
-    lager:info("[prom:~s] Adding scrapper on ~s with an interval of ~p",
+    lager:info("[prom:~s] Adding scraper on ~s with an interval of ~p",
                [Name, URL, Freq]),
-    erlang:send_after(Freq, self(), scrap),
+    erlang:send_after(Freq, self(), scrape),
     {Host, Port} = dp_util:ddb_config(),
     C = dp_util:ddb_c(ddb_tcp:connect(Host,Port)),
     C1 = dp_util:ddb_c(ddb_tcp:stream_mode(Bucket, 5, C)),
@@ -106,20 +106,20 @@ handle_cast(_Msg, State) ->
 %% @end
 %%--------------------------------------------------------------------
 
-handle_info(scrap, State = #state{url = URL, freq = F}) ->
+handle_info(scrape, State = #state{url = URL, freq = F}) ->
     State1 = case hackney:get(URL) of
                  {ok, 200, _Hdrs, Client} ->
                      {ok, Body} = hackney:body(Client),
                      L = binary:split(Body, [<<"\r\n">>, <<"\n">>], [global]),
                      Metrics = [dp_prometheus:parse(E) || E <- L],
                      Metrics2 = lists:flatten([M || {ok, M} <- Metrics]),
-                     io:format("scrap: ~s -> ~p~n", [URL, length(Metrics2)]),
+                     lager:info("scrape: ~s -> ~p~n", [URL, length(Metrics2)]),
                      lists:foldl(fun do_send/2, State, Metrics2);
                  _ ->
-                     io:format("scrap error on: ~s~n", [URL]),
+                     lager:error("scrape error on: ~s~n", [URL]),
                      State
              end,
-    erlang:send_after(F, self(), scrap),
+    erlang:send_after(F, self(), scrape),
     {noreply, State1};
 
 handle_info(_Info, State) ->

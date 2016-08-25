@@ -5,6 +5,7 @@
   {mod, { ddb_proxy_app, []}},
   {applications,
    [kernel,
+    lager,
     stdlib,
     ranch,
     hackney,

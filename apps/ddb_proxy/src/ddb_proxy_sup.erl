@@ -33,6 +33,8 @@ listener({Decoder, Bucket, Port} = L)
     Name  = listener_name(L),
     Proto = dp_line_proto,
     State = #{bucket => Bucket, decoder => Decoder},
+    lager:info("[listener:~s] Adding listener on bucket: ~p and port ~p~n",
+		[Name, Bucket, Port]),
     {ok, _} = ranch:start_listener(Name, 100,
                                    ranch_tcp, [{port, Port}],
                                    Proto, State),
@@ -41,8 +43,7 @@ listener({Decoder, Bucket, Port} = L)
 start_link() ->
     R = supervisor:start_link({local, ?SERVER}, ?MODULE, []),
     {ok, Listeners} = application:get_env(ddb_proxy, listeners),
-    {ok, Db} = application:get_env(ddb_proxy, db),
-    pgapp:connect(Db),
+    dqe_idx_pg:init(),
     [listener(L) || L <- Listeners],
     R.
 

@@ -40,8 +40,8 @@ child(Name, Bucket, URL, Frequency) ->
     Restart = permanent,
     Shutdown = 2000,
     Type = worker,
-    {Name, {dqe_proxy_prom_scrapper, start_link, [Name, Bucket, URL, Frequency]},
-     Restart, Shutdown, Type, [dqe_proxy_prom_scrapper]}.
+    {Name, {dqe_proxy_prom_scraper, start_link, [Name, Bucket, URL, Frequency]},
+     Restart, Shutdown, Type, [dqe_proxy_prom_scraper]}.
 %%--------------------------------------------------------------------
 %% @private
 %% @doc
@@ -60,7 +60,7 @@ init([]) ->
     MaxRestarts = 1000,
     MaxSecondsBetweenRestarts = 3600,
     SupFlags = {RestartStrategy, MaxRestarts, MaxSecondsBetweenRestarts},
-    Targets = application:get_env(ddb_proxy, prom_scrappers, []),
+    Targets = application:get_env(ddb_proxy, prom_scrapers, []),
     Children = [child(Name, Bucket, URL, Frequency)
                 || {Name, Bucket, URL, Frequency} <- Targets],
     {ok, {SupFlags, Children}}.
