@@ -1,0 +1,9 @@
+Package: ddb_proxy
+Version: {{VERSION}}
+License: MIT
+Vendor: dataloop
+Maintainer: Heinz N. Gies <heinz@licenser.net>
+Section: default
+Priority: extra
+Homepage: http://www.dalmatiner.io
+Description: Dalamtinerdb proxy
