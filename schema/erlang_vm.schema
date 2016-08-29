@@ -1,0 +1,46 @@
+%%-*- mode: erlang -*-
+
+%% @doc Enables or disables the kernel poll functionality if the
+%% emulator supports it. If the emulator does not support kernel poll,
+%% and the K flag is passed to the emulator, a warning is issued at
+%% startup.
+%%
+%% Similar information at: http://erlang.org/doc/man/erl.html
+{mapping, "erlang.K", "vm_args.+K", [
+  {default, on},
+  {datatype, flag},
+  hidden
+]}.
+
+%%%% Tunables
+%% @doc Name of the Erlang node
+{mapping, "nodename", "vm_args.-name", [
+  {default, "{{node}}"}
+]}.
+
+%% @doc Cookie for distributed node communication.  All nodes in the
+%% same cluster should use the same cookie or they will not be able to
+%% communicate.
+{mapping, "distributed_cookie", "vm_args.-setcookie", [
+  {default, "ddb_proxy_cookie"}
+]}.
+
+%% @doc Sets the number of threads in async thread pool, valid range
+%% is 0-1024. If thread support is available, the default is 64.
+%%
+%% More information at: http://erlang.org/doc/man/erl.html
+{mapping, "erlang.async_threads", "vm_args.+A", [
+  {default, 30},
+  {datatype, integer},
+  {validators, ["range:0-1024"]}
+]}.
+
+{validator, "range:0-1024", "must be 0 to 1024",
+ fun(X) -> X >= 0 andalso X =< 1024 end}.
+
+%% @doc Set the location of crash dumps
+{mapping, "erlang.crash_dump", "vm_args.-env ERL_CRASH_DUMP", [
+  {default, "{{crash_dump}}"},
+  {datatype, file},
+  hidden
+]}.

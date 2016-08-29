@@ -1,0 +1,11 @@
+[Unit]
+Description=DalmatinerDB Proxy
+After=network.target
+
+[Service]
+User=dalmatiner
+ExecStart=/usr/lib/ddb_proxy/bin/ddb_proxy console -noinput +Bd
+
+[Install]
+WantedBy=multi-user.target
+

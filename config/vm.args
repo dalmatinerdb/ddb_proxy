@@ -1,6 +1,0 @@
--sname ddb_proxy
-
--setcookie ddb_proxy_cookie
-
-+K true
-+A30
