@@ -1,7 +1,9 @@
 # DalmatinerDB Proxy
 
+Official Site: https://dalmatiner.io/
+
 A multi protocol metric proxy for use with DalmatinerDB. Supports Graphite, Metrics2.0, Prometheus and OpenTSDB
-inputs and outputs them into DalmatinerDB over the binary protocol to port 5555.
+inputs and outputs them into DalmatinerDB over the binary protocol.
 
 ![dalmatiner architecture](http://cdn2.hubspot.net/hubfs/528953/dalmatiner.png "Dalmatiner Architecture")
 
