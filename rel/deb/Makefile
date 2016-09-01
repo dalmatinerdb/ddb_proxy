@@ -19,7 +19,7 @@ prepare:
 	cp -r ../../_build/deb/rel/ddb_proxy/releases stage/usr/lib/ddb_proxy/
 	cp -r ../../_build/deb/rel/ddb_proxy/share stage/usr/lib/ddb_proxy/
 	cp -r systemd/ddb_proxy.service stage/etc/systemd/system/ddb_proxy.service
-	cp -r ../../example/*conf stage/etc
+	cp -r ../../example/*conf stage/etc/ddb_proxy/
 
 clean:
 	rm -rf ./stage

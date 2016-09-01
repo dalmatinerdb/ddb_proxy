@@ -10,20 +10,29 @@
  [{default, {"127.0.0.1", 5555}},
   {datatype, ip}]}.
 
+%% @doc The bucket where scraped Prometheus data will be stored. This property
+%% is preceded by the name of the scraper e.g.
+%% prometheus_scrapers.my_scraper_name.bucket = PromLocal
 {mapping, "prometheus_scrapers.$name.bucket", "ddb_proxy.prom_scrapers",
  [{datatype, string},
   {default, "{{prometheus_default_bucket}}"},
   {commented, "{{prometheus_default_bucket}}"},
   {include_default, "node_exporter"}]}.
 
+%% @doc The metrics HTTP endpoint of the target system for scraping.
+%% This property is preceded by the name of the scraper e.g.
+%% prometheus_scrapers.my_scraper_name.url = "http://localhost:9090/metrics"
 {mapping, "prometheus_scrapers.$name.url", "ddb_proxy.prom_scrapers",
  [{datatype, string},
   {default, "{{prometheus_default_url}}"},
   {commented, "{{prometheus_default_url}}"},
   {include_default, "node_exporter"}]}.
 
+%% @doc Interval of time between scraping requests to the target endpoint.
+%% This property is prefixed by the name of the scraper e.g.
+%% prometheus_scrapers.my_scraper_name.frequency = 10s
 {mapping, "prometheus_scrapers.$name.frequency", "ddb_proxy.prom_scrapers",
- [{datatype, integer},
+ [{datatype, {duration, ms}},
   {default, {{prometheus_default_frequency}}},
   {commented, {{prometheus_default_frequency}}},
   {include_default, "node_exporter"}]}.
@@ -44,11 +53,19 @@ fun(Conf) ->
     lists:usort(Scrapers)
 end}.
 
+%% @doc The bucket where incomming data will be stored by the listener.
+%% This property is prefixed by the name of the line protocol used, which can
+%% be one of 'dp_influx', 'dp_graphite', 'dp_otsdb' or 'dp_metrics2' e.g.
+%% listeners.dp_influx.bucket = InfluxData
 {mapping, "listeners.$decoder.bucket", "ddb_proxy.listeners",
  [{datatype, string},
   {default, "{{listeners_default_bucket}}"},
   {include_default, "{{listeners_default_decoder}}"}]}.
 
+%% @doc The TCP port used for listening.
+%% This property is prefixed by the name of the line protocol used, which can
+%% be one of 'dp_influx', 'dp_graphite', 'dp_otsdb' or 'dp_metrics2' e.g.
+%% listeners.dp_influx.port = 8086
 {mapping, "listeners.$decoder.port", "ddb_proxy.listeners",
  [{datatype, integer},
   {default, "{{listeners_default_port}}"},

@@ -34,7 +34,7 @@ listener({Decoder, Bucket, Port} = L)
     Proto = dp_line_proto,
     State = #{bucket => Bucket, decoder => Decoder},
     lager:info("[listener:~s] Adding listener on bucket: ~p and port ~p~n",
-		[Name, Bucket, Port]),
+                [Name, Bucket, Port]),
     {ok, _} = ranch:start_listener(Name, 100,
                                    ranch_tcp, [{port, Port}],
                                    Proto, State),
