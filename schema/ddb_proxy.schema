@@ -62,13 +62,22 @@ end}.
   {default, "{{listeners_default_bucket}}"},
   {include_default, "{{listeners_default_decoder}}"}]}.
 
-%% @doc The TCP port used for listening.
+%% @doc The port used for listening.
 %% This property is prefixed by the name of the line protocol used, which can
 %% be one of 'dp_influx', 'dp_graphite', 'dp_otsdb' or 'dp_metrics2' e.g.
 %% listeners.dp_influx.port = 8086
 {mapping, "listeners.$decoder.port", "ddb_proxy.listeners",
  [{datatype, integer},
   {default, "{{listeners_default_port}}"},
+  {include_default, "{{listeners_default_decoder}}"}]}.
+
+%% @doc The protocol used for listening, which may either be 'http' or 'tcp'.
+%% This property is prefixed by the name of the line protocol used, which can
+%% be one of 'dp_influx', 'dp_graphite', 'dp_otsdb' or 'dp_metrics2' e.g.
+%% listeners.dp_influx.protocol = http
+{mapping, "listeners.$decoder.protocol", "ddb_proxy.listeners",
+ [{datatype, string},
+  {default, "{{listeners_default_proto}}"},
   {include_default, "{{listeners_default_decoder}}"}]}.
 
 {translation, "ddb_proxy.listeners",
@@ -80,7 +89,10 @@ fun(Conf) ->
             cuttlefish:conf_get(["listeners", Name, "bucket"], Conf),
          Port =
             cuttlefish:conf_get(["listeners", Name, "port"], Conf),
-         {list_to_atom(Name), list_to_binary(Bucket), Port}
+         Protocol =
+            cuttlefish:conf_get(["listeners", Name, "protocol"], Conf),
+         {list_to_atom(Name), list_to_binary(Bucket),
+          Port, list_to_atom(Protocol)}
     end || Name <- Names],
     lists:usort(Listeners)
 end}.

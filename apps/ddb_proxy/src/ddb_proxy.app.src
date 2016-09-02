@@ -9,10 +9,10 @@
     stdlib,
     ranch,
     hackney,
+    cowboy,
     dp_decoder,
     dqe_idx,
     dqe_idx_pg,
-    trie,
     ddb_client
    ]},
   {env,[]},
