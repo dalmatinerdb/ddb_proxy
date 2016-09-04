@@ -23,8 +23,9 @@
 listener_name({Decoder, Bucket, Port, Protocol}) ->
     DecoderB = atom_to_binary(Decoder, utf8),
     PortB = integer_to_binary(Port),
+    ProtocolB = atom_to_binary(Protocol, utf8),
     BName = <<DecoderB/binary, "_", Bucket/binary, "_",
-              PortB/binary, "_", Protocol/binary>>,
+              PortB/binary, "_", ProtocolB/binary>>,
     binary_to_atom(BName, utf8).
 
 listener({Decoder, Bucket, Port, Protocol} = L)
@@ -33,7 +34,8 @@ listener({Decoder, Bucket, Port, Protocol} = L)
        is_integer(Port),
        Port > 0 ->
     Name  = listener_name(L),
-    State = #{bucket => Bucket, decoder => Decoder},
+    State = #{bucket => Bucket, decoder => Decoder,
+              proto => Decoder:protocol()},
     lager:info("[listener:~s] Adding listener on bucket: ~p and port ~p~n",
                 [Name, Bucket, Port]),
     start_listener(Protocol, Name, Port, State).
@@ -70,10 +72,13 @@ init([]) ->
     Restart = permanent,
     Shutdown = 2000,
     Type = supervisor,
-    C = {ddb_proxy_prom_sup,
-         {ddb_proxy_prom_sup, start_link, []},
-         Restart, Shutdown, Type, [ddb_proxy_prom_sup]},
-    {ok, { {one_for_all, 0, 1}, [C]} }.
+    Prom = {ddb_proxy_prom_sup,
+            {ddb_proxy_prom_sup, start_link, []},
+            Restart, Shutdown, Type, [ddb_proxy_prom_sup]},
+    Idx = {dp_index,
+           {dp_index, start_link, []},
+           Restart, Shutdown, worker, [dp_index]},
+    {ok, { {one_for_one, 0, 1}, [Prom, Idx]} }.
 
 %%====================================================================
 %% Internal functions

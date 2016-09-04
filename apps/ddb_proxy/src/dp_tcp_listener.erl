@@ -13,7 +13,7 @@ init(Ref, Socket, Transport, M = #{bucket := Bucket}) ->
     {Host, Port} = dp_util:ddb_config(),
     C = dp_util:ddb_c(ddb_tcp:connect(Host,Port)),
     C1 = dp_util:ddb_c(ddb_tcp:stream_mode(Bucket, 5, C)),
-    loop(Socket, Transport, <<>>, M#{ddb => C1, seen => gb_sets:new()}).
+    loop(Socket, Transport, <<>>, M#{ddb => C1}).
 
 loop(Socket, Transport, Acc, State) ->
     case Transport:recv(Socket, 0, 5000) of
