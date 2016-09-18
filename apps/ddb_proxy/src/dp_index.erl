@@ -36,7 +36,12 @@ start_link() ->
     gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
 
 add(Bucket, Metric) ->
-    gen_server:cast(?SERVER, {tags, Bucket, Metric}).
+    case erlang:process_info(whereis(?SERVER), message_queue_len) of
+        {message_queue_len, N} when N > 100 ->
+            gen_server:call(?SERVER, {tags, Bucket, Metric});
+        _ ->
+            gen_server:cast(?SERVER, {tags, Bucket, Metric})
+    end.
 
 %%%===================================================================
 %%% gen_server callbacks
@@ -70,6 +75,9 @@ init([]) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
+handle_call({tags, Bucket, Metric}, _From, State) ->
+    State1 = do_add(Bucket, Metric, State),
+    {reply, ok, State1};
 handle_call(_Request, _From, State) ->
     Reply = ok,
     {reply, Reply, State}.
@@ -84,23 +92,12 @@ handle_call(_Request, _From, State) ->
 %%                                  {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_cast({tags, Bucket, Metric = #{key := Key}},
-            State = #state{seen = Seen}) ->
-    KeyBin = dproto:metric_from_list(Key),
-    K = <<Bucket/binary, 0,  KeyBin/binary>>,
-    case btrie:is_key(K, Seen) of
-        true ->
-            {noreply, State};
-        false ->
-            #{metric := MetricParts, tags := Tags} =
-                dp_util:expand_tags(Metric),
-            MetricBin = dproto:metric_from_list(MetricParts),
-            dqe_idx:add(Bucket, MetricBin, Bucket, KeyBin, Tags),
-            {noreply, State#state{seen = btrie:store(K, Seen)}}
-    end;
-
+handle_cast({tags, Bucket, Metric}, State) ->
+    State1 = do_add(Bucket, Metric, State),
+    {noreply, State1};
 handle_cast(_Msg, State) ->
     {noreply, State}.
+
 
 %%--------------------------------------------------------------------
 %% @private
@@ -143,3 +140,17 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
+
+do_add(Bucket, Metric = #{key := Key}, State = #state{seen = Seen}) ->
+    KeyBin = dproto:metric_from_list(Key),
+    K = <<Bucket/binary, 0,  KeyBin/binary>>,
+    case btrie:is_key(K, Seen) of
+        true ->
+            State;
+        false ->
+            #{metric := MetricParts, tags := Tags} =
+                dp_util:expand_tags(Metric),
+            MetricBin = dproto:metric_from_list(MetricParts),
+            dqe_idx:add(Bucket, MetricBin, Bucket, KeyBin, Tags),
+            State#state{seen = btrie:store(K, Seen)}
+    end.

@@ -10,9 +10,6 @@ _*
 ebin
 log
 erl_crash.dump
-rebar3.crashdump
 .rebar
 logs
 _build
-apps/esyslog/src/esyslog_message_lexer.erl
-apps/esyslog/src/esyslog_message_parser.erl
