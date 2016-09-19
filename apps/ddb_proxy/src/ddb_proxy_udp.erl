@@ -112,7 +112,7 @@ handle_cast(_Msg, State) ->
 handle_info({udp, _Socket, _IP, _InPortNo, Packet},
             State = #state{ds = #{bucket := Bucket}}) ->
     case esyslog_message:parse(Packet) of
-        {ok, M = #{timestamp := T}} ->
+        {ok, M = #{<<"timestamp">> := T}} ->
             ddb_connection:events(Bucket, [{T, M}]);
         _ ->
             io:format("bad packet: ~p~n", [Packet])

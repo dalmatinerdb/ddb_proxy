@@ -63,12 +63,12 @@ cleanup_header({PriorityMonth, Day, Hour, Minute, Second, [Host | TagL]}) ->
     Seconds = erlang:universaltime_to_posixtime(Universal),
     Nano = erlang:convert_time_unit(Seconds, seconds, nano_seconds),
     #{
-      priority => Priority,
-      facility => Facility,
-      severity => Severity,
-      timestamp => Nano,
-      host => list_to_binary(Host),
-      tag => list_to_binary(Tag)
+       <<"priority">> => Priority,
+       <<"facility">> => Facility,
+       <<"severity">> => Severity,
+       <<"timestamp">> => Nano,
+       <<"host">> => list_to_binary(Host),
+       <<"tag">> => list_to_binary(Tag)
      }.
 
 cleanup_body(BodyTokens) ->
@@ -122,7 +122,7 @@ cleanup_body(_Previous = {':', W1}, _Current = {':', W2}, [Next | Rest], Result)
     cleanup_body({word, string:concat(atom_to_list(W1), atom_to_list(W2))}, Next, Rest, Result).
 
 cleanup(Header, Body) ->
-    {ok, Header#{body => list_to_binary(lib:nonl(Body))}}.
+    {ok, Header#{<<"body">> => list_to_binary(lib:nonl(Body))}}.
 
 %% @spec decode_priority(Priority::priority()) -> {facility(), severity()}
 %% @doc Decodes a priority value into facility and severity
@@ -137,31 +137,31 @@ unword({word, X}) ->
                              esyslog_message:facility().
 decode_facility(Facility) ->
     case Facility of
-        0 -> kern;
-        1 -> user;
-        2 -> mail;
-        3 -> system;
-        4 -> auth;
-        5 -> internal;
-        6 -> lpr;
-        7 -> nns;
-        8 -> uucp;
-        9 -> clock;
-        10 -> authpriv;
-        11 -> ftp;
-        12 -> ntp;
-        13 -> audit;
-        14 -> alert;
-        15 -> clock2;
-        16 -> local0;
-        17 -> local1;
-        18 -> local2;
-        19 -> local3;
-        20 -> local4;
-        21 -> local5;
-        22 -> local6;
-        23 -> local7;
-        _ -> undefined
+        0 -> <<"kern">>;
+        1 -> <<"user">>;
+        2 -> <<"mail">>;
+        3 -> <<"system">>;
+        4 -> <<"auth">>;
+        5 -> <<"internal">>;
+        6 -> <<"lpr">>;
+        7 -> <<"nns">>;
+        8 -> <<"uucp">>;
+        9 -> <<"clock">>;
+        10 -> <<"authpriv">>;
+        11 -> <<"ftp">>;
+        12 -> <<"ntp">>;
+        13 -> <<"audit">>;
+        14 -> <<"alert">>;
+        15 -> <<"clock2">>;
+        16 -> <<"local0">>;
+        17 -> <<"local1">>;
+        18 -> <<"local2">>;
+        19 -> <<"local3">>;
+        20 -> <<"local4">>;
+        21 -> <<"local5">>;
+        22 -> <<"local6">>;
+        23 -> <<"local7">>;
+        _ -> <<"">>
     end.
 
 -spec decode_severity(non_neg_integer()) ->
@@ -169,13 +169,13 @@ decode_facility(Facility) ->
 
 decode_severity(Severity) ->
     case Severity of
-        0 -> emerg;
-        1 -> alert;
-        2 -> crit;
-        3 -> err;
-        4 -> warn;
-        5 -> notice;
-        6 -> info;
-        7 -> debug;
-        _ -> undefined
+        0 -> <<"emerg">>;
+        1 -> <<"alert">>;
+        2 -> <<"crit">>;
+        3 -> <<"err">>;
+        4 -> <<"warn">>;
+        5 -> <<"notice">>;
+        6 -> <<"info">>;
+        7 -> <<"debug">>;
+        _ -> <<"">>
     end.
