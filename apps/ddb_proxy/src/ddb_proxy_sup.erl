@@ -46,6 +46,11 @@ start_listener(tcp, Name, Port, State) ->
                                    ranch_tcp, [{port, Port}],
                                    Proto, State),
     ok;
+
+start_listener(udp, Name, Port, State) ->
+    {ok, _} = ddb_proxy_udp:start_listener(Name, Port, State),
+    ok;
+
 start_listener(http, Name, Port, State) ->
     Proto = dp_http_listener,
     Dispatch = cowboy_router:compile([{'_', [{"/[...]", Proto, State}]}]),

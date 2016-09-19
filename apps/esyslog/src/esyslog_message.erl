@@ -119,11 +119,12 @@ parse_test() ->
                 "cgi-bin/Qdownload/html/rlist.html\" \"Mozilla/5.0 (Macintosh;"
                 " U; Intel Mac OS X 10.6; en-US; rv:1.9.1.5) Gecko/2009110\"">>
      },
-    Parsed1 = parse("<30>Dec 13 19:40:50 thttpd[1340]: 192.168.1.138 - admin "
-                    "\"GET /cgi-bin/Qdownload/html/1260751250.rcsv HTTP/1.1\" "
-                    "200 138 \"http://illmatic:8080/cgi-bin/Qdownload/html/"
-                    "rlist.html\" \"Mozilla/5.0 (Macintosh; U; Intel Mac OS X "
-                    "10.6; en-US; rv:1.9.1.5) Gecko/2009110\""),
+    {ok, Parsed1} = parse("<30>Dec 13 19:40:50 thttpd[1340]: 192.168.1.138 - "
+                          "admin \"GET /cgi-bin/Qdownload/html/1260751250.rcsv "
+                          "HTTP/1.1\" 200 138 "
+                          "\"http://illmatic:8080/cgi-bin/Qdownload/html/"
+                          "rlist.html\" \"Mozilla/5.0 (Macintosh; U; Intel Mac "
+                          "OS X 10.6; en-US; rv:1.9.1.5) Gecko/2009110\""),
 
     Expected2 = #{
       priority => 30,
@@ -135,8 +136,9 @@ parse_test() ->
       body => <<"spawned CGI process 24156 for file "
                 "'cgi-bin/Qdownload/refresh.cgi'">>
      },
-    Parsed2 = parse("<30>Dec 13 19:41:03 thttpd[1340]: spawned CGI process "
-                    "24156 for file 'cgi-bin/Qdownload/refresh.cgi'"),
+    {ok, Parsed2} = parse("<30>Dec 13 19:41:03 thttpd[1340]: spawned CGI "
+                          "process 24156 for file "
+                          "'cgi-bin/Qdownload/refresh.cgi'"),
 
     Expected3 = #{
       priority => 147,
@@ -147,8 +149,8 @@ parse_test() ->
       tag => <<"mytag[909]">>,
       body => <<"yo what's really real">>
      },
-    Parsed3 = parse("<147>Nov 18 19:17:55 myhost mytag[909]: yo what's "
-                    "really real"),
+    {ok, Parsed3} = parse("<147>Nov 18 19:17:55 myhost mytag[909]: yo what's "
+                          "really real"),
 
     Expected4 = #{
       priority => 147,
@@ -159,27 +161,44 @@ parse_test() ->
       tag => <<"mytag[909]">>,
       body => <<"yo">>
      },
-    Parsed4 = parse("<147>Nov 18 19:17:55 myhost mytag[909]: yo"),
+    {ok, Parsed4} = parse("<147>Nov 18 19:17:55 myhost mytag[909]: yo"),
 
-    %%{4,
-    %% {{Year, 12, 20}, {16, 27, 32}},
-    %% "ccabanilla-mac",
-    %% "com.apple.launchd.peruser.501[522] (org.apache.couchdb[59972])",
-    %% "Exited with exit code: 1"} = parse("<4>Dec 20 16:27:32 ccabanilla-mac com.apple.launchd.peruser.501[522] (org.apache.couchdb[59972]): Exited with exit code: 1"),
+    Expected5 = #{
+      priority => 12,
+      facility => user,
+      severity => warn,
+      timestamp => to_nano(9, 19, 3, 55, 25),
+      host => <<"Schroedinger">>,
+      tag => <<"com.apple.xpc.launchd[1] (com.adobe.ARMDCHelper."
+               "cc24aef4a1b90ed56a725c38014c95072f92651fb65e1bf9c"
+               "8e43c37a23d420d[60845])">>,
+      body => <<"Service exited with abnormal code:111\n ">>
+     },
+    {ok, Parsed5} = parse("<12>Sep 19 03:55:25 Schroedinger com.apple.xpc."
+                          "launchd[1] (com.adobe.ARMDCHelper.cc24aef4a1b90ed56"
+                          "a725c38014c95072f92651fb65e1bf9c8e43c37a23d420d"
+                          "[60845]): Service exited with abnormal code: 111\n"),
 
-    %%{5,
-    %% {{Year, 12, 20}, {16, 27, 32}},
-    %% "ccabanilla-mac",
-    %% "[0x0-0x99099].com.fluidapp.FluidInstance.Gmail[32480]",
-    %% "Sun Dec 20 16:27:32 ccabanilla-mac FluidInstance[32480] <Error>: kCGErrorIllegalArgument: CGSGetWindowBounds: NULL window"} = parse("<5>Dec 20 16:27:32 ccabanilla-mac [0x0-0x99099].com.fluidapp.FluidInstance.Gmail[32480]: Sun Dec 20 16:27:32 ccabanilla-mac FluidInstance[32480] <Error>: kCGErrorIllegalArgument: CGSGetWindowBounds: NULL window"),
-
-    Expected5 = bad_message,
-    Parsed5 = parse("asdf"),
+    Expected6 = #{
+      priority => 5,
+      facility => kern,
+      severity => notice,
+      timestamp => to_nano(9, 19, 4, 2, 59),
+      host => <<"Schroedinger">>,
+      tag => <<"sandboxd[155] ([531])">>,
+      body => <<"Paste(531) deny file-read-data "
+                "/Applications/Emacs.app/Contents/PkgInfo">>
+     },
+    {ok, Parsed6} = parse("<5>Sep 19 04:02:59 Schroedinger sandboxd[155] "
+                          "([531]): Paste(531) deny file-read-data "
+                          "/Applications/Emacs.app/Contents/PkgInfo\n"),
 
     ?assertEqual(Expected1, Parsed1),
     ?assertEqual(Expected2, Parsed2),
     ?assertEqual(Expected3, Parsed3),
     ?assertEqual(Expected4, Parsed4),
-    ?assertEqual(Expected5, Parsed5).
+    ?assertEqual(Expected5, Parsed5),
+    ?assertEqual(Expected6, Parsed6),
+    ?assertEqual(bad_message, parse("asdf")).
 
 -endif.

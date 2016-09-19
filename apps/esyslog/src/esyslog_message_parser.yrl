@@ -1,5 +1,5 @@
 Nonterminals
-message header body any priority_month day hour minute second host tag .
+message header body any priority_month day hour minute second host_tag .
 
 Terminals
 word ':'.
@@ -8,9 +8,7 @@ Rootsymbol message.
 
 message -> header ':' body : cleanup('$1', cleanup_body('$3')).
 
-header -> priority_month day hour ':' minute ':' second host tag
-              : cleanup_header({'$1', '$2', '$3', '$5', '$7', '$8', '$9'}).
-header -> priority_month day hour ':' minute ':' second tag
+header -> priority_month day hour ':' minute ':' second host_tag
               : cleanup_header({'$1', '$2', '$3', '$5', '$7', '$8'}).
 
 body -> any      : ['$1'].
@@ -19,20 +17,23 @@ body -> any body : lists:append(['$1'], '$2').
 any -> word : '$1'.
 any -> ':' : '$1'.
 
-priority_month -> word : '$1'.
-day -> word : '$1'.
-hour -> word : '$1'.
-minute -> word : '$1'.
-second -> word : '$1'.
-host -> word : '$1'.
-tag -> word : '$1'.
+priority_month -> word : unword('$1').
+day            -> word : unword('$1').
+hour           -> word : unword('$1').
+minute         -> word : unword('$1').
+second         -> word : unword('$1').
+host_tag       -> word : [unword('$1')].
+host_tag       -> word host_tag : [unword('$1')] ++ '$2'.
 
 
 Erlang code.
+cleanup_header({PriorityMonth, Day, Hour, Minute, Second, [Tag]}) ->
+    cleanup_header({PriorityMonth, Day, Hour, Minute, Second,
+                    ["localhost", Tag]});
 
-cleanup_header({{word, PriorityMonth}, {word, Day}, {word, Hour}, {word, Minute}, {word, Second}, {word, Host}, {word, Tag}}) ->
+cleanup_header({PriorityMonth, Day, Hour, Minute, Second, [Host | TagL]}) ->
     [PriorityStr, MonthStr] = string:tokens(PriorityMonth, "<>"),
-
+    Tag = string:join(TagL, " "),
     Priority = list_to_integer(PriorityStr),
     {Facility, Severity} = decode_priority(Priority),
 
@@ -62,16 +63,13 @@ cleanup_header({{word, PriorityMonth}, {word, Day}, {word, Hour}, {word, Minute}
     Seconds = erlang:universaltime_to_posixtime(Universal),
     Nano = erlang:convert_time_unit(Seconds, seconds, nano_seconds),
     #{
-       priority => Priority,
-       facility => Facility,
-       severity => Severity,
-       timestamp => Nano,
-       host => list_to_binary(Host),
-       tag => list_to_binary(Tag)
-     };
-
-cleanup_header({PriorityMonth, Day, Hour, Minute, Second, Tag}) ->
-    cleanup_header({PriorityMonth, Day, Hour, Minute, Second, {word, "localhost"}, Tag}).
+      priority => Priority,
+      facility => Facility,
+      severity => Severity,
+      timestamp => Nano,
+      host => list_to_binary(Host),
+      tag => list_to_binary(Tag)
+     }.
 
 cleanup_body(BodyTokens) ->
     case length(BodyTokens) of
@@ -124,13 +122,16 @@ cleanup_body(_Previous = {':', W1}, _Current = {':', W2}, [Next | Rest], Result)
     cleanup_body({word, string:concat(atom_to_list(W1), atom_to_list(W2))}, Next, Rest, Result).
 
 cleanup(Header, Body) ->
-    Header#{body => list_to_binary(Body)}.
+    {ok, Header#{body => list_to_binary(lib:nonl(Body))}}.
 
 %% @spec decode_priority(Priority::priority()) -> {facility(), severity()}
 %% @doc Decodes a priority value into facility and severity
 decode_priority(Priority) ->
     {decode_facility(Priority div 8),
      decode_severity(Priority rem 8)}.
+
+unword({word, X}) ->
+    X.
 
 -spec decode_facility(non_neg_integer()) ->
                              esyslog_message:facility().

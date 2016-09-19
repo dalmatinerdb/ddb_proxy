@@ -13,7 +13,9 @@
     dp_decoder,
     dqe_idx,
     dqe_idx_pg,
-    ddb_client
+    ddb_client,
+    ddb_connection,
+    esyslog
    ]},
   {env,[]},
   {modules, []},
