@@ -17,3 +17,6 @@ deb-prepare:
 	$(REBAR) as deb compile
 	$(REBAR) as deb release
 	make -C rel/deb prepare
+
+package: rel
+	make -C rel/pkg package

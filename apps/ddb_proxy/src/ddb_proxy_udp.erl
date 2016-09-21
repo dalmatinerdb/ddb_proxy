@@ -109,11 +109,14 @@ handle_cast(_Msg, State) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_info({udp, _Socket, _IP, _InPortNo, Packet},
+handle_info({udp, _Socket, IP, _InPortNo, Packet},
             State = #state{ds = #{bucket := Bucket}}) ->
     case esyslog_message:parse(Packet) of
         {ok, M = #{<<"timestamp">> := T}} ->
-            ddb_connection:events(Bucket, [{T, M}]);
+            M1 = M#{
+                   <<"src_ip">> => ip2str(IP)
+                  },
+            ddb_connection:events(Bucket, [{T, M1}]);
         _ ->
             io:format("bad packet: ~p~n", [Packet])
     end,
@@ -151,3 +154,6 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
+
+ip2str({A, B, C, D}) ->
+    list_to_binary(io_lib:format("~p.~p.~p.~p", [A, B, C, D])).

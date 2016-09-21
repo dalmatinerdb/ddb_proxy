@@ -8,6 +8,7 @@
  {<<"dqe_idx">>,{pkg,<<"dqe_idx">>,<<"0.1.18">>},0},
  {<<"dqe_idx_pg">>,{pkg,<<"dqe_idx_pg">>,<<"0.2.12">>},0},
  {<<"epgsql">>,{pkg,<<"epgsql">>,<<"3.1.1">>},2},
+ {<<"fifo_utils">>,{pkg,<<"fifo_utils">>,<<"0.1.22">>},0},
  {<<"goldrush">>,{pkg,<<"goldrush">>,<<"0.1.8">>},1},
  {<<"hackney">>,{pkg,<<"hackney">>,<<"1.6.1">>},0},
  {<<"idna">>,{pkg,<<"idna">>,<<"1.2.0">>},1},
@@ -18,8 +19,10 @@
  {<<"mmath">>,{pkg,<<"mmath">>,<<"0.2.9">>},0},
  {<<"pgapp">>,{pkg,<<"pgapp">>,<<"0.0.1">>},1},
  {<<"poolboy">>,{pkg,<<"poolboy">>,<<"1.5.1">>},1},
+ {<<"quickrand">>,{pkg,<<"quickrand">>,<<"1.5.3">>},2},
  {<<"ranch">>,{pkg,<<"ranch">>,<<"1.2.1">>},0},
  {<<"recon">>,{pkg,<<"recon">>,<<"2.3.2">>},0},
  {<<"snappy">>,{pkg,<<"snappy">>,<<"1.1.1">>},2},
  {<<"ssl_verify_fun">>,{pkg,<<"ssl_verify_fun">>,<<"1.1.0">>},1},
- {<<"trie">>,{pkg,<<"trie">>,<<"1.5.3">>},0}].
+ {<<"trie">>,{pkg,<<"trie">>,<<"1.5.3">>},0},
+ {<<"uuid_erl">>,{pkg,<<"uuid_erl">>,<<"1.5.1">>},1}].
