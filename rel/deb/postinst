@@ -8,5 +8,11 @@ fi
 
 CONFFILE=/etc/ddb_proxy/ddb_proxy.conf
 
-cp ${CONFFILE}.example ${CONFFILE}
-sed -i -e "s/dqe_idx_ddb/dqe_idx_pg/g" ${CONFFILE}
+if [ ! -f "${CONFFILE}" ]
+then
+    echo "Creating new configuration from example file."
+    sed -i -e "s/dqe_idx_ddb/dqe_idx_pg/g" ${CONFFILE}
+    cp ${CONFFILE}.example ${CONFFILE}
+else
+    echo "Please update your configuration according to the update manual!"
+fi

@@ -30,4 +30,3 @@ priority(Token) ->
             Token
         )
     ).
-    

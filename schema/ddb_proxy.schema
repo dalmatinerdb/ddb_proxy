@@ -68,7 +68,8 @@ end}.
   {default, "{{listeners_default_port}}"},
   {include_default, "{{listeners_default_decoder}}"}]}.
 
-%% @doc The protocol used for listening, which may either be 'http' or 'tcp'.
+%% @doc The transport used for listening, which may either be 'http', 'tcp' or
+%% 'udp'.
 %% This property is prefixed by the name of the line protocol used, which can
 %% be one of 'dp_influx', 'dp_graphite', 'dp_otsdb', 'dp_syslog' or
 %% 'dp_metrics2' e.g.

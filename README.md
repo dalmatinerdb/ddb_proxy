@@ -2,8 +2,13 @@
 
 Official Site: https://dalmatiner.io/
 
-A multi protocol metric proxy for use with DalmatinerDB. Supports Graphite, Metrics2.0, Prometheus and OpenTSDB
-inputs and outputs them into DalmatinerDB over the binary protocol.
+A multi metric and event log proxy for use with DalmatinerDB.
+
+## Supported metric formats
+Supports Graphite, Metrics2.0, Influx, Prometheus and OpenTSDB
+
+## Supported log formats
+Currently only Syslog is supported.
 
 ![dalmatiner architecture](http://cdn2.hubspot.net/hubfs/528953/dalmatiner.png "Dalmatiner Architecture")
 
@@ -11,7 +16,7 @@ This proxy connects by default to DalmatinerDB Storage on localhost:5555 and Dal
 
 Requirements: As per the diagram you will need both DalmatinerDB and Postgres running.
 
-# Configuration
+# Metric Listener Configuration
 
 Settings are configured in ddb_proxy.conf
 
@@ -38,6 +43,15 @@ Metadata is supported by inserting an 'empty'. Example:
 
 When using tags the base of the metric has to be provided first, followed by tags, so in the example above a would be the base metric.
 
+## InfluxDB
+
+Enable the Influx listener with the following config lines.
+
+```
+listeners.dp_influx.bucket = influx
+listeners.dp_influx.bucket = http
+listeners.dp_influx.port = 8086
+```
 
 ## Metrics 2.0
 
@@ -45,6 +59,7 @@ Enable the Metrics 2.0 listener with the following config lines.
 
 ```
 listeners.dp_metrics2.bucket = metrics2.0
+listeners.dp_metrics2.protocol = tcp
 listeners.dp_metrics2.port = 2004
 ```
 
@@ -65,9 +80,23 @@ Enable the OpenTSDB listener with the following config lines.
 
 ```
 listeners.dp_otsdb.bucket = OpenTSDB
+listeners.dp_otsdb.protocol = tcp
 listeners.dp_otsdb.port = 4242
 ```
 
+# Log Listener Configuration
+
+Settings are configured in ddb_proxy.conf
+
+## Syslog
+
+Enable the OpenTSDB listener with the following config lines.
+
+```
+listeners.dp_syslog.bucket = syslog
+listeners.dp_syslog.port = 514
+listeners.dp_syslog.protocol = udp
+```
 
 Build
 -----
