@@ -5,11 +5,6 @@
  [{default, "{{run_user_home}}"},
   {datatype, string}]}.
 
-%% @doc The TCP endpoint for the backend server.
-{mapping, "ddb_connection.backend_server", "ddb_proxy.backend",
- [{default, {"127.0.0.1", 5555}},
-  {datatype, ip}]}.
-
 %% @doc The bucket where scraped Prometheus data will be stored. This property
 %% is preceded by the name of the scraper e.g.
 %% prometheus_scrapers.my_scraper_name.bucket = PromLocal
