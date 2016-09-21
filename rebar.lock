@@ -25,4 +25,4 @@
  {<<"snappy">>,{pkg,<<"snappy">>,<<"1.1.1">>},2},
  {<<"ssl_verify_fun">>,{pkg,<<"ssl_verify_fun">>,<<"1.1.0">>},1},
  {<<"trie">>,{pkg,<<"trie">>,<<"1.5.3">>},0},
- {<<"uuid_erl">>,{pkg,<<"uuid_erl">>,<<"1.5.1">>},1}].
+ {<<"uuid">>,{pkg,<<"uuid_erl">>,<<"1.5.1">>},1}].

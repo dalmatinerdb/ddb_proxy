@@ -20,27 +20,27 @@ case $2 in
             echo "User already exists, skipping creation."
         else
             echo Creating dalmatinerfe user ...
-            useradd -g $GROUP -d /data/dalmatinerfe -s /bin/false $USER
+            useradd -g $GROUP -d /data/ddb_proxy -s /bin/false $USER
             /usr/sbin/usermod -K defaultpriv=basic,net_privaddr $USER
         fi
         echo Creating directories ...
-        mkdir -p /data/dalmatinerfe/etc
-        mkdir -p /data/dalmatinerfe/db
-        mkdir -p /data/dalmatinerfe/log/sasl
-        chown -R $USER:$GROUP /data/dalmatinerfe
-        if [ -d /tmp/dalmatinerfe ]
+        mkdir -p /data/ddb_proxy/etc
+        mkdir -p /data/ddb_proxy/db
+        mkdir -p /data/ddb_proxy/log/sasl
+        chown -R $USER:$GROUP /data/ddb_proxy
+        if [ -d /tmp/ddb_proxy ]
         then
-            chown -R $USER:$GROUP /tmp/dalmatinerfe
+            chown -R $USER:$GROUP /tmp/ddb_proxy
         fi
         ;;
     POST-INSTALL)
         echo Importing service ...
-        svccfg import /opt/local/dalmatinerfe/share/dfe.xml
+        svccfg import /opt/local/dalmatiner-proxy/share/ddb_proxy.xml
         echo Trying to guess configuration ...
         IP=`ifconfig net0 | grep inet | $AWK '{print $2}'`
 
-        CONFFILE=/data/dalmatinerfe/etc/dalmatinerfe.conf
-        cp /opt/local/dalmatinerfe/etc/dalmatinerfe.conf.example ${CONFFILE}.example
+        CONFFILE=/data/ddb_proxy/etc/ddb_proxy.conf
+        cp /opt/local/dalmatiner-proxy/etc/ddb_proxy.conf.example ${CONFFILE}.example
 
         if [ ! -f "${CONFFILE}" ]
         then
