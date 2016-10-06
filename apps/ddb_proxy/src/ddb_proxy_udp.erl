@@ -60,7 +60,7 @@ start_link(Name, Port, State) ->
 %% @end
 %%--------------------------------------------------------------------
 init([Name, Port, State]) ->
-    {ok, Socket} = gen_udp:open(Port,  [list, {active, true}]),
+    {ok, Socket} = gen_udp:open(Port,  [binary, {active, true}]),
     {ok, #state{
             socket = Socket,
             port   = Port,
@@ -110,21 +110,26 @@ handle_cast(_Msg, State) ->
 %% @end
 %%--------------------------------------------------------------------
 handle_info({udp, _Socket, IP, _InPortNo, Packet},
-            State = #state{ds = #{bucket := Bucket}}) ->
-    case esyslog_message:parse(Packet) of
-        {ok, M = #{<<"timestamp">> := T}} ->
-            M1 = M#{
-                   <<"src_ip">> => ip2str(IP)
-                  },
-            ddb_connection:events(Bucket, [{T, M1}]);
-        _ ->
-            io:format("bad packet: ~p~n", [Packet])
+            State = #state{ds = #{decoder := Decoder, bucket := Bucket}}) ->
+    case Decoder:parse(Packet) of
+        {ok, Es} ->
+            %% TODO, how to handled metrics
+            Events =
+                [{T, D#{
+                       <<"src_ip">> => ip2str(IP)
+                      }} || #{time := T, type := event, data := D} <- Es],
+            io:format("~p~n", [Events]),
+            ddb_connection:events(Bucket, Events);
+        Er ->
+            io:format("bad packet: ~p~n~n ==> ~p~n", [Packet, Er])
     end,
     {noreply, State};
 
 handle_info(Info, State) ->
     io:format("nknown udp message: ~p~n", [Info]),
     {noreply, State}.
+
+
 
 %%--------------------------------------------------------------------
 %% @private

@@ -15,7 +15,6 @@
     dqe_idx_pg,
     ddb_client,
     ddb_connection,
-    esyslog,
     trie,
     jsone
    ]},
