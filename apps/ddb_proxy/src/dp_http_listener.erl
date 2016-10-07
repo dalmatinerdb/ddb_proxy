@@ -1,8 +1,7 @@
 -module(dp_http_listener).
 -behaviour(cowboy_http_handler).
 
-%% -export([init/3, handle/2, terminate/3]).
--compile(export_all).
+-export([init/3, handle/2, terminate/3]).
 
 -ignore_xref([init/3, handle/2, terminate/3]).
 
