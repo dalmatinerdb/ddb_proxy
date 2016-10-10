@@ -1,3 +1,4 @@
+APP=ddb_proxy
 include fifo.mk
 
 all:
