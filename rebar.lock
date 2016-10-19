@@ -27,8 +27,7 @@
  {<<"snappy">>,{pkg,<<"snappy">>,<<"1.1.1">>},2},
  {<<"ssl_verify_fun">>,{pkg,<<"ssl_verify_fun">>,<<"1.1.0">>},1},
  {<<"trie">>,{pkg,<<"trie">>,<<"1.5.4">>},0},
- {<<"uuid">>,{pkg,<<"uuid_erl">>,<<"1.5.4">>},1},
- {<<"uuid_erl">>,{pkg,<<"uuid_erl">>,<<"1.5.4">>},1}]}.
+ {<<"uuid">>,{pkg,<<"uuid_erl">>,<<"1.5.4">>},1}]}.
 [
 {pkg_hash,[
  {<<"certifi">>, <<"A7966EFB868B179023618D29A407548F70C52466BF1849B9E8EBD0E34B7EA11F">>},
@@ -59,6 +58,5 @@
  {<<"snappy">>, <<"D63449A58F1358046B7ADAEC166AE8929C2B19881E76C4E13284304FE887C39A">>},
  {<<"ssl_verify_fun">>, <<"EDEE20847C42E379BF91261DB474FFBE373F8ACB56E9079ACB6038D4E0BF414F">>},
  {<<"trie">>, <<"DC9A5A076FEE8A168FEAB7E35B5100ADC58D6B4F031F4D87CE2F372FCFFD8E53">>},
- {<<"uuid">>, <<"06240EFF3EAF013CC22274689B0C1FF6345645EE5D47A9E4ED7545EEB7698B23">>},
- {<<"uuid_erl">>, <<"06240EFF3EAF013CC22274689B0C1FF6345645EE5D47A9E4ED7545EEB7698B23">>}]}
+ {<<"uuid">>, <<"06240EFF3EAF013CC22274689B0C1FF6345645EE5D47A9E4ED7545EEB7698B23">>}]}
 ].
