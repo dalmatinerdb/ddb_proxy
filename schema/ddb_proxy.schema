@@ -50,8 +50,8 @@ end}.
 
 %% @doc The bucket where incomming data will be stored by the listener.
 %% This property is prefixed by the name of the line protocol used, which can
-%% be one of 'dp_influx', 'dp_graphite', 'dp_otsdb', 'dp_bsdsyslog' or
-%% 'dp_metrics2' e.g.
+%% be one of 'dp_influx', 'dp_graphite', 'dp_otsdb', 'dp_bsdsyslog',
+%% 'dp_metrics2' or 'dp_prom_writer' e.g.
 %% listeners.dp_influx.bucket = InfluxData
 {mapping, "listeners.$decoder.bucket", "ddb_proxy.listeners",
  [{datatype, string},
@@ -60,8 +60,8 @@ end}.
 
 %% @doc The port used for listening.
 %% This property is prefixed by the name of the line protocol used, which can
-%% be one of 'dp_influx', 'dp_graphite', 'dp_otsdb', 'dp_bsdsyslog' or
-%% 'dp_metrics2' e.g.
+%% be one of 'dp_influx', 'dp_graphite', 'dp_otsdb', 'dp_bsdsyslog',
+%% 'dp_metrics2' or 'dp_prom_writer' e.g.
 %% listeners.dp_influx.port = 8086
 {mapping, "listeners.$decoder.port", "ddb_proxy.listeners",
  [{datatype, integer},
@@ -71,8 +71,8 @@ end}.
 %% @doc The transport used for listening, which may either be 'http', 'tcp' or
 %% 'udp'.
 %% This property is prefixed by the name of the line protocol used, which can
-%% be one of 'dp_influx', 'dp_graphite', 'dp_otsdb', 'dp_bsdsyslog' or
-%% 'dp_metrics2' e.g.
+%% be one of 'dp_influx', 'dp_graphite', 'dp_otsdb', 'dp_bsdsyslog',
+%% 'dp_metrics2' or 'dp_prom_writer'
 %% listeners.dp_influx.protocol = http
 {mapping, "listeners.$decoder.protocol", "ddb_proxy.listeners",
  [{datatype, string},
