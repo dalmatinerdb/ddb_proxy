@@ -1,13 +1,13 @@
-  Congratulations the DalnatinerFE server was sucessfully installed
+  Congratulations the Dalmatiner Proxy server was sucessfully installed
 .------------------------------------------------------------------------------.
 | By default the service is disabled since it's common that you will need to   |
 | do some additional configurations.                                           |
 |                                                                              |
 | Please have a look at the configuraiton files:                               |
 |                                                                              |
-|  * /opt/local/dalmatinerfe/etc/dalmatinerfe.conf                             |
+|  * /data/ddb_proxy/etc/ddb_proxy.conf                                        |
 |                                                                              |
-| Note: To enable DalmatinerFE you first need to enable the epmd service.      |
+| Note: To enable Dalmatiner Proxy you first need to enable the epmd service.  |
 |                                                                              |
 `------------------------------------------------------------------------------'
 
