@@ -8,7 +8,7 @@ clean:
 	$(REBAR) clean
 	make -C rel/deb clean
 
-rel: update
+rel:
 	$(REBAR) as prod release
 
 deb-clean:
