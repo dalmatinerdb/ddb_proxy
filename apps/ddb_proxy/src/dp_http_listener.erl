@@ -8,7 +8,7 @@
 init(_Transport, Req, State = #{bucket := Bucket}) ->
     {Host, Port} = dp_util:ddb_config(),
     C = dp_util:ddb_c(ddb_tcp:connect(Host, Port)),
-    {ok, #{resolution => Res}, C1} = ddb_tcp:bucket_info(Bucket, C),
+    {ok, #{resolution := Res}, C1} = ddb_tcp:bucket_info(Bucket, C),
     Res1 = Res div 1000,
     C2 = dp_util:ddb_c(ddb_tcp:stream_mode(Bucket, 5 , C1)),
     {ok, Req, State#{ddb => C2, res => Res1}}.
