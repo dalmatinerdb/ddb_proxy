@@ -12,7 +12,7 @@
 ├─ dqe_idx_pg─0.3.5
 │  └─ pgapp─0.0.1
 │     └─ epgsql─3.1.1
-├─ fifo_utils─0.1.27
+├─ fifo_utils─0.1.30
 │  └─ uuid─1.5.4
 │     └─ quickrand─1.5.4
 ├─ hackney─1.6.3
