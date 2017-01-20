@@ -2,6 +2,8 @@
 
 -export([send/3]).
 
+-ignore_xref([send/3]).
+
 send(Line, Acc, State) ->
     send1(<<Acc/binary, Line/binary>>, State).
 

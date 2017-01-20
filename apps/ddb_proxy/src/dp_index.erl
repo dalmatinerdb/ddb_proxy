@@ -17,6 +17,8 @@
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
          terminate/2, code_change/3]).
 
+-ignore_xref([start_link/0]).
+
 -define(SERVER, ?MODULE).
 
 -record(state, {seen = btrie:new()}).
@@ -150,7 +152,6 @@ do_add(Bucket, Metric = #{key := Key}, State = #state{seen = Seen}) ->
         false ->
             #{metric := MetricParts, tags := Tags} =
                 dp_util:expand_tags(Metric),
-            MetricBin = dproto:metric_from_list(MetricParts),
-            dqe_idx:add(Bucket, MetricBin, Bucket, KeyBin, Tags),
+            dqe_idx:add(Bucket, MetricParts, Bucket, Key, Tags),
             State#state{seen = btrie:store(K, Seen)}
     end.

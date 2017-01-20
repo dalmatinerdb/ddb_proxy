@@ -17,11 +17,12 @@
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
          terminate/2, code_change/3]).
 
+-ignore_xref([start_link/4]).
+
 -define(SERVER, ?MODULE).
 
 -record(state, {url :: string(),
                 freq :: pos_integer(),
-                seen = gb_sets:new(),
                 bucket :: binary(),
                 ddb}).
 
@@ -154,17 +155,9 @@ code_change(_OldVsn, State, _Extra) ->
 %%% Internal functions
 %%%===================================================================
 do_send(Decoded = #{time := Time, key := Key, value := Value},
-        State = #state{bucket = Bucket, seen = Seen, ddb = C}) ->
+        State = #state{bucket = Bucket, ddb = C}) ->
     KeyBin = dproto:metric_from_list(Key),
     Points = mmath_bin:from_list([Value]),
     C1 = dp_util:ddb_c(ddb_tcp:send(KeyBin, Time, Points, C)),
-    State1 = State#state{ddb = C1},
-    case gb_sets:is_element(KeyBin, Seen) of
-        true ->
-            State1;
-        false ->
-            #{metric := Metric, tags := Tags} = dp_util:expand_tags(Decoded),
-            MetricBin = dproto:metric_from_list(Metric),
-            dqe_idx:add(Bucket, MetricBin, Bucket, KeyBin, Tags),
-            State1#state{seen = gb_sets:add_element(MetricBin, Seen)}
-    end.
+    dp_index:add(Bucket, Decoded),
+    State#state{ddb = C1}.

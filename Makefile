@@ -1,3 +1,4 @@
+APP=ddb_proxy
 include fifo.mk
 
 all:
@@ -7,7 +8,7 @@ clean:
 	$(REBAR) clean
 	make -C rel/deb clean
 
-rel: update
+rel: FORCE
 	$(REBAR) as prod release
 
 deb-clean:
@@ -20,3 +21,5 @@ deb-prepare:
 
 package: rel
 	make -C rel/pkg package
+
+FORCE:

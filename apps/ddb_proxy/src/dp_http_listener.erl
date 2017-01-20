@@ -1,15 +1,14 @@
 -module(dp_http_listener).
 -behaviour(cowboy_http_handler).
 
-%% -export([init/3, handle/2, terminate/3]).
--compile(export_all).
+-export([init/3, handle/2, terminate/3]).
 
 -ignore_xref([init/3, handle/2, terminate/3]).
 
 init(_Transport, Req, State = #{bucket := Bucket}) ->
     {Host, Port} = dp_util:ddb_config(),
     C = dp_util:ddb_c(ddb_tcp:connect(Host, Port)),
-    {ok, {Res, _, _}, C1} = ddb_tcp:bucket_info(Bucket, C),
+    {ok, #{resolution := Res}, C1} = ddb_tcp:bucket_info(Bucket, C),
     Res1 = Res div 1000,
     C2 = dp_util:ddb_c(ddb_tcp:stream_mode(Bucket, 5 , C1)),
     {ok, Req, State#{ddb => C2, res => Res1}}.
