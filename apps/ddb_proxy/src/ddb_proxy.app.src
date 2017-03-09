@@ -1,6 +1,6 @@
 {application, ddb_proxy,
  [{description, "Dalmatiner proxy"},
-  {vsn, "0.3.1"},
+  {vsn, "0.3.1p1"},
   {registered, []},
   {mod, { ddb_proxy_app, []}},
   {applications,
