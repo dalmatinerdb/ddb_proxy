@@ -1,4 +1,4 @@
-VERSION=0.3.1p2
+VERSION=0.3.1p3
 COMPONENT_INTERNAL=ddb_proxy
 COMPONENT=dalmatiner-proxy
 DEPS="erlang" "coreutils" "sudo"
