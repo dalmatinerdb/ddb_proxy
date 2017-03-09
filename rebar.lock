@@ -24,7 +24,7 @@
  {<<"quickrand">>,{pkg,<<"quickrand">>,<<"1.5.4">>},2},
  {<<"ranch">>,{pkg,<<"ranch">>,<<"1.2.1">>},0},
  {<<"recon">>,{pkg,<<"recon">>,<<"2.3.2">>},0},
- {<<"snappyer">>,{pkg,<<"snappyer">>,<<"1.2.0">>},2},
+ {<<"snappyer">>,{pkg,<<"snappyer">>,<<"1.2.0">>},0},
  {<<"ssl_verify_fun">>,{pkg,<<"ssl_verify_fun">>,<<"1.1.1">>},1},
  {<<"trie">>,{pkg,<<"trie">>,<<"1.6.0">>},0},
  {<<"uuid">>,{pkg,<<"uuid_erl">>,<<"1.5.4">>},1}]}.
