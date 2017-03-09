@@ -16,7 +16,9 @@ add_tags(N, [E | R], Tags) ->
 
 
 ddb_config() ->
-    application:get_env(ddb_connection, backend, {"127.0.0.1", 5555}).
+    Host = application:get_env(ddb_connection, backend_host, "127.0.0.1"),
+    Port = application:get_env(ddb_connection, backend_port, 5555),
+    {Host, Port}.
 
 ddb_c({ok, C}) ->
     C;
