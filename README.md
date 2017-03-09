@@ -65,7 +65,7 @@ listeners.dp_metrics2.port = 2004
 
 The metrics 2.0 protocol us fully supported, all metrics 2.0 metrics use the base metric `metric` with the data fully in tags.
 
-## Prometheus
+## Prometheus Scrapper
 
 Enable the Prometheus scraper with the following config lines.
 ```
@@ -73,6 +73,22 @@ prometheus_scrapers.node_exporter.bucket = prom
 prometheus_scrapers.node_exporter.url = http://localhost:9100/metrics
 prometheus_scrapers.node_exporter.frequency = 10000
 ```
+
+## Prometheus Remote Wrtiter
+
+To enabler the Prometheus remote write API:
+```
+listeners.dp_prom_writer.bucket = promwriter
+listeners.dp_prom_writer.port = 1234
+listeners.dp_prom_writer.protocol = http
+```
+
+And configure the remote written in the Prometheus config:
+```yaml
+remote_writer:
+  url: "http://<host>:1234/receive"
+```
+
 
 ## OpenTSDB
 
