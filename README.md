@@ -20,6 +20,15 @@ Requirements: As per the diagram you will need both DalmatinerDB and Postgres ru
 
 Settings are configured in ddb_proxy.conf
 
+## DQE Indexer backend
+
+Firstly, it is important to configure the dqe indexer module that you intend to use.
+
+For example, for the Postgres Indexer, configure your ddb_proxy.conf as follows:
+```
+idx.backend = dqe_idx_pg
+```
+
 ## Graphite
 
 Enable the Graphite listener with the following config lines.
