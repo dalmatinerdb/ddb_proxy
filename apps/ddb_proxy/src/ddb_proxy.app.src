@@ -16,6 +16,7 @@
     ddb_client,
     ddb_connection,
     trie,
+    snappiest,
     jsone
    ]},
   {env,[]},
