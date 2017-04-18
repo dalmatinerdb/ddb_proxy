@@ -12,7 +12,7 @@ Currently only Syslog is supported.
 
 ![dalmatiner architecture](http://cdn2.hubspot.net/hubfs/528953/dalmatiner.png "Dalmatiner Architecture")
 
-This proxy connects by default to DalmatinerDB Storage on localhost:5555 and DalmatinerDB Metadata (Postgres) on localhost:5432
+This protocol translator connects by default to DalmatinerDB Storage on localhost:5555 and DalmatinerDB Metadata (Postgres) on localhost:5432
 
 Requirements: As per the diagram you will need both DalmatinerDB and Postgres running.
 
@@ -111,7 +111,7 @@ listeners.dp_otsdb.port = 4242
 
 # Log Listener Configuration
 
-Settings are configured in ddb_proxy.conf
+Settings are configured in dalmatinerpx.conf 
 
 ## Syslog
 
