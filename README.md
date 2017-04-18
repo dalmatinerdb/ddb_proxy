@@ -1,8 +1,8 @@
-# DalmatinerDB Proxy
+# DalmatinerDB Protocol X(-translator)
 
 Official Site: https://dalmatiner.io/
 
-A multi metric and event log proxy for use with DalmatinerDB.
+A multi metric and event log protocol translator for use with DalmatinerDB.
 
 ## Supported metric formats
 Supports Graphite, Metrics2.0, Influx, Prometheus and OpenTSDB
@@ -18,13 +18,13 @@ Requirements: As per the diagram you will need both DalmatinerDB and Postgres ru
 
 # Metric Listener Configuration
 
-Settings are configured in ddb_proxy.conf
+Settings are configured in dalmatinerpx.conf
 
 ## DQE Indexer backend
 
 Firstly, it is important to configure the dqe indexer module that you intend to use.
 
-For example, for the Postgres Indexer, configure your ddb_proxy.conf as follows:
+For example, for the Postgres Indexer, configure your dalmatinerpx.conf as follows:
 ```
 idx.backend = dqe_idx_pg
 ```

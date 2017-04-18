@@ -1,9 +1,11 @@
-Package: ddb_proxy
-Version: {{VERSION}}
+Package: dalmatinerpx
+Version: 0.3.2
 License: MIT
-Vendor: dataloop
-Maintainer: Heinz N. Gies <heinz@licenser.net>
-Section: default
-Priority: extra
+Section: base
+Vendor: Project-Fifo
+Maintainer: Project-Fifo <info@project-fifo.net>
+Priority: optional
+Architecture: amd64
 Homepage: http://www.dalmatiner.io
-Description: Dalamtinerdb proxy
+Description: Dalmatiner PX
+  Distributed TSBD. Woof.

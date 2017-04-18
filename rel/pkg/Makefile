@@ -1,6 +1,6 @@
 VERSION=0.3.2
-COMPONENT_INTERNAL=ddb_proxy
-COMPONENT=dalmatiner-proxy
+COMPONENT_INTERNAL=dpx
+COMPONENT=dpx
 DEPS="erlang" "coreutils" "sudo"
 
 include ../../_build/default/lib/fifo_utils/priv/pkg.mk

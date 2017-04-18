@@ -4,9 +4,9 @@
         Copyright 2012 Project FiFo / Heinz N. Gies
 -->
 
-<service_bundle type='manifest' name='dalmatiner-proxy'>
+<service_bundle type='manifest' name='dalmatiner-px'>
   <service
-    name='dalmatiner/proxy'
+    name='dalmatiner/px'
     type='service'
     version='0.1.0'>
     <create_default_instance enabled='false' />
@@ -44,13 +44,13 @@
     <exec_method
       type='method'
       name='start'
-      exec='/opt/local/dalmatiner-proxy/bin/ddb_proxy %m'
+      exec='/opt/local/dpx/bin/dpx %m'
       timeout_seconds='30'>
       <method_context>
         <method_credential user='dalmatiner' group='dalmatiner' privileges='basic,net_privaddr' />
 	<method_environment>
 	  <envvar name='PATH' value='/opt/local/gnu/bin:/opt/local/bin:/opt/local/sbin:/usr/bin:/usr/sbin'/>
-	  <envvar name='HOME' value='/data/ddb_proxy'/>
+	  <envvar name='HOME' value='/data/dalmatinerpx'/>
 	</method_environment>
       </method_context>
     </exec_method>
@@ -58,13 +58,13 @@
     <exec_method
 	name='restart'
 	type='method'
-        exec='/opt/local/dalmatiner-proxy/bin/ddb_proxy %m'
+        exec='/opt/local/dpx/bin/dpx %m'
 	timeout_seconds='60'>
       <method_context>
         <method_credential user='dalmatiner' group='dalmatiner' privileges='basic,net_privaddr' />
 	<method_environment>
 	  <envvar name='PATH' value='/opt/local/gnu/bin:/opt/local/bin:/opt/local/sbin:/usr/bin:/usr/sbin'/>
-	  <envvar name='HOME' value='/data/ddb_proxy'/>
+	  <envvar name='HOME' value='/data/dalmatinerpx'/>
 	</method_environment>
       </method_context>
     </exec_method>
@@ -72,13 +72,13 @@
     <exec_method
 	name='stop'
 	type='method'
-        exec='/opt/local/dalmatiner-proxy/bin/ddb_proxy %m'
+        exec='/opt/local/dpx/bin/dpx %m'
 	timeout_seconds='60'>
       <method_context>
         <method_credential user='dalmatiner' group='dalmatiner' privileges='basic,net_privaddr' />
 	<method_environment>
 	  <envvar name='PATH' value='/opt/local/gnu/bin:/opt/local/bin:/opt/local/sbin:/usr/bin:/usr/sbin'/>
-	  <envvar name='HOME' value='/data/ddb_proxy'/>
+	  <envvar name='HOME' value='/data/dalmatinerpx'/>
 	</method_environment>
       </method_context>
     </exec_method>
@@ -86,7 +86,7 @@
     <template>
       <common_name>
         <loctext xml:lang='C'>
-          DalmatinerDB proxy.
+          Dalmatiner PX.
         </loctext>
       </common_name>
     </template>
