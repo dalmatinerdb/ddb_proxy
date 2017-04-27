@@ -3,8 +3,9 @@ Description=DalmatinerDB Proxy
 After=network.target
 
 [Service]
-User=dalmatiner
-ExecStart=/usr/lib/ddb_proxy/bin/ddb_proxy console -noinput +Bd
+User=dalmatinerpx
+Group=dalmatinerpx
+ExecStart=/usr/lib/dpx/bin/dpx console -noinput +Bd
 
 [Install]
 WantedBy=multi-user.target

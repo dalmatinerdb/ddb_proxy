@@ -1,4 +1,4 @@
-APP=ddb_proxy
+APP=dpx
 include fifo.mk
 
 all:
@@ -19,6 +19,9 @@ deb-prepare:
 	$(REBAR) as deb release
 	make -C rel/deb prepare
 
+deb-package: deb-prepare
+	make -C rel/deb package
+	
 package: rel
 	make -C rel/pkg package
 

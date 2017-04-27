@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-/opt/local/dalmatiner-proxy/bin/ddb_proxy $@

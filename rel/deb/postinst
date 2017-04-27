@@ -1,17 +1,23 @@
 #!/bin/bash
 
-# Sort out file permissions
-if [[ $(id dalmatiner 2>/dev/null) ]] ;then
-    chown -R dalmatiner:dalmatiner /var/lib/ddb_proxy
-    chown -R dalmatiner:dalmatiner /var/log/ddb_proxy
+if [ ! -d "/data/dalmatinerproxy" ]; then
+    mkdir -p /data/dalmatinerpx
 fi
 
-CONFFILE=/etc/ddb_proxy/ddb_proxy.conf
+if [ ! -d "/data/dalmatinerproxy/log" ]; then
+    mkdir -p /data/dalmatinerpx/log
+fi
+
+# Sort out file permissions
+if [[ $(id dalmatinerproxy 2>/dev/null) ]] ;then
+    chown -R dalmatinerpx:dalmatinerpx /data/dalmatinerpx
+fi
+
+CONFFILE=/data/dalmatinerpx/etc/dalmatinerpx.conf
 
 if [ ! -f "${CONFFILE}" ]
 then
     echo "Creating new configuration from example file."
-    sed -i -e "s/dqe_idx_ddb/dqe_idx_pg/g" ${CONFFILE}
     cp ${CONFFILE}.example ${CONFFILE}
 else
     echo "Please update your configuration according to the update manual!"
