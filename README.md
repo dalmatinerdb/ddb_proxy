@@ -1,8 +1,8 @@
-# DalmatinerDB Proxy
+# DalmatinerDB Protocol X(-translator)
 
 Official Site: https://dalmatiner.io/
 
-A multi metric and event log proxy for use with DalmatinerDB.
+A multi metric and event log protocol translator for use with DalmatinerDB.
 
 ## Supported metric formats
 Supports Graphite, Metrics2.0, Influx, Prometheus and OpenTSDB
@@ -12,13 +12,22 @@ Currently only Syslog is supported.
 
 ![dalmatiner architecture](http://cdn2.hubspot.net/hubfs/528953/dalmatiner.png "Dalmatiner Architecture")
 
-This proxy connects by default to DalmatinerDB Storage on localhost:5555 and DalmatinerDB Metadata (Postgres) on localhost:5432
+This protocol translator connects by default to DalmatinerDB Storage on localhost:5555 and DalmatinerDB Metadata (Postgres) on localhost:5432
 
 Requirements: As per the diagram you will need both DalmatinerDB and Postgres running.
 
 # Metric Listener Configuration
 
-Settings are configured in ddb_proxy.conf
+Settings are configured in dalmatinerpx.conf
+
+## DQE Indexer backend
+
+Firstly, it is important to configure the dqe indexer module that you intend to use.
+
+For example, for the Postgres Indexer, configure your dalmatinerpx.conf as follows:
+```
+idx.backend = dqe_idx_pg
+```
 
 ## DQE Indexer backend
 
@@ -111,7 +120,7 @@ listeners.dp_otsdb.port = 4242
 
 # Log Listener Configuration
 
-Settings are configured in ddb_proxy.conf
+Settings are configured in dalmatinerpx.conf 
 
 ## Syslog
 

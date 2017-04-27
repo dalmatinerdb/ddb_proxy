@@ -1,3 +1,3 @@
-DalmatinerFE is the frontend server for DalmatinerDB handling querries and providing a UI and a HTTP API to access the data.
+DalmatinerPX is the protocol translator for DalmatinerDB allowing for multiple metric protocols to be sent to DalmatinerDB. Protocols include Graphite, Metrics2.0, Influx, Prometheus and OpenTSDB.
 
 https://dalmatiner.io
