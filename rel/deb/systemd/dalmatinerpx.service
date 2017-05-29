@@ -5,7 +5,7 @@ After=network.target
 [Service]
 User=dalmatinerpx
 Group=dalmatinerpx
-ExecStart=/usr/lib/dpx/bin/dpx console -noinput +Bd
+ExecStart=/usr/lib/dalmatinerpx/bin/dpx console -noinput +Bd
 
 [Install]
 WantedBy=multi-user.target
