@@ -30,7 +30,7 @@ unsnap(<<255,6,0,0, "sNaPpY", Data/binary>>) ->
 -define(SKIPPLE_END, 16#fd).
 
 unsnap_chunk(?SNAPPY_CHUNK, <<_CrC:32, Compressed/binary>>) ->
-    {ok, C} = snappyer:decompress(Compressed),
+    {ok, C} = snappiest:decompress(Compressed),
     C;
 unsnap_chunk(?UNCOMPRESSED_CHUNK, D) ->
     D;

@@ -1,8 +1,8 @@
-# DalmatinerDB Proxy
+# DalmatinerDB Protocol X(-translator)
 
 Official Site: https://dalmatiner.io/
 
-A multi metric and event log proxy for use with DalmatinerDB.
+A multi metric and event log protocol translator for use with DalmatinerDB.
 
 ## Supported metric formats
 Supports Graphite, Metrics2.0, Influx, Prometheus and OpenTSDB
@@ -12,13 +12,31 @@ Currently only Syslog is supported.
 
 ![dalmatiner architecture](http://cdn2.hubspot.net/hubfs/528953/dalmatiner.png "Dalmatiner Architecture")
 
-This proxy connects by default to DalmatinerDB Storage on localhost:5555 and DalmatinerDB Metadata (Postgres) on localhost:5432
+This protocol translator connects by default to DalmatinerDB Storage on localhost:5555 and DalmatinerDB Metadata (Postgres) on localhost:5432
 
 Requirements: As per the diagram you will need both DalmatinerDB and Postgres running.
 
 # Metric Listener Configuration
 
-Settings are configured in ddb_proxy.conf
+Settings are configured in dalmatinerpx.conf
+
+## DQE Indexer backend
+
+Firstly, it is important to configure the dqe indexer module that you intend to use.
+
+For example, for the Postgres Indexer, configure your dalmatinerpx.conf as follows:
+```
+idx.backend = dqe_idx_pg
+```
+
+## DQE Indexer backend
+
+Firstly, it is important to configure the dqe indexer module that you intend to use.
+
+For example, for the Postgres Indexer, configure your ddb_proxy.conf as follows:
+```
+idx.backend = dqe_idx_pg
+```
 
 ## Graphite
 
@@ -65,7 +83,7 @@ listeners.dp_metrics2.port = 2004
 
 The metrics 2.0 protocol us fully supported, all metrics 2.0 metrics use the base metric `metric` with the data fully in tags.
 
-## Prometheus
+## Prometheus Scrapper
 
 Enable the Prometheus scraper with the following config lines.
 ```
@@ -73,6 +91,22 @@ prometheus_scrapers.node_exporter.bucket = prom
 prometheus_scrapers.node_exporter.url = http://localhost:9100/metrics
 prometheus_scrapers.node_exporter.frequency = 10000
 ```
+
+## Prometheus Remote Wrtiter
+
+To enabler the Prometheus remote write API:
+```
+listeners.dp_prom_writer.bucket = promwriter
+listeners.dp_prom_writer.port = 1234
+listeners.dp_prom_writer.protocol = http
+```
+
+And configure the remote written in the Prometheus config:
+```yaml
+remote_writer:
+  url: "http://<host>:1234/receive"
+```
+
 
 ## OpenTSDB
 
@@ -86,7 +120,7 @@ listeners.dp_otsdb.port = 4242
 
 # Log Listener Configuration
 
-Settings are configured in ddb_proxy.conf
+Settings are configured in dalmatinerpx.conf 
 
 ## Syslog
 

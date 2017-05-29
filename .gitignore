@@ -17,3 +17,4 @@ _build
 apps/esyslog/src/esyslog_message_lexer.erl
 apps/esyslog/src/esyslog_message_parser.erl
 *~
+rel/deb/*.deb
