@@ -44,7 +44,7 @@
     <exec_method
       type='method'
       name='start'
-      exec='/opt/local/dpx/bin/dpx %m'
+      exec='/opt/local/dalmatinerpx/bin/dpx %m'
       timeout_seconds='30'>
       <method_context>
         <method_credential user='dalmatiner' group='dalmatiner' privileges='basic,net_privaddr' />
@@ -58,7 +58,7 @@
     <exec_method
 	name='restart'
 	type='method'
-        exec='/opt/local/dpx/bin/dpx %m'
+        exec='/opt/local/dalmatinerpx/bin/dpx %m'
 	timeout_seconds='60'>
       <method_context>
         <method_credential user='dalmatiner' group='dalmatiner' privileges='basic,net_privaddr' />
@@ -72,7 +72,7 @@
     <exec_method
 	name='stop'
 	type='method'
-        exec='/opt/local/dpx/bin/dpx %m'
+        exec='/opt/local/dalmatinerpx/bin/dpx %m'
 	timeout_seconds='60'>
       <method_context>
         <method_credential user='dalmatiner' group='dalmatiner' privileges='basic,net_privaddr' />

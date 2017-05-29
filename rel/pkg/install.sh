@@ -35,12 +35,12 @@ case $2 in
         ;;
     POST-INSTALL)
         echo Importing service ...
-        svccfg import /opt/local/dpx/share/dpx.xml
+        svccfg import /opt/local/dalmatinerpx/share/dpx.xml
         echo Trying to guess configuration ...
         IP=`ifconfig net0 | grep inet | $AWK '{print $2}'`
 
         CONFFILE=/data/dalmatinerpx/etc/dalmatinerpx.conf
-        cp /opt/local/dpx/etc/dalmatinerpx.conf.example ${CONFFILE}.example
+        cp /opt/local/dalmatinerpx/etc/dalmatinerpx.conf.example ${CONFFILE}.example
 
         if [ ! -f "${CONFFILE}" ]
         then
