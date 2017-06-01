@@ -16,5 +16,5 @@ decode_metric(Metric,  State = #{bucket := Bucket, ddb := C,
     KeyBin = dproto:metric_from_list(Key),
     Points = mmath_bin:from_list([Value]),
     C1 = dp_util:ddb_c(ddb_tcp:send(KeyBin, Time div Res, Points, C)),
-    dp_index:add(Bucket, Metric),
+    dp_index:add(Bucket, Metric, Time),
     State#{ddb => C1}.
