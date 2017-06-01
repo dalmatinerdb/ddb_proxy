@@ -6,7 +6,7 @@
 %%% @end
 %%% Created :  7 Jun 2016 by Heinz Nikolaus Gies <heinz@licenser.net>
 %%%-------------------------------------------------------------------
--module(dqe_proxy_prom_scraper).
+-module(ddb_proxy_prom_scraper).
 
 -behaviour(gen_server).
 
@@ -24,6 +24,9 @@
 -record(state, {url :: string(),
                 freq :: pos_integer(),
                 bucket :: binary(),
+                %% this looks silly but the prom data
+                %% already arrives in 1s resolution
+                res = 1000 div 1000 :: pos_integer(),
                 ddb}).
 
 %%%===================================================================
@@ -61,9 +64,11 @@ init([Name, Bucket, URL, Freq]) ->
     erlang:send_after(Freq, self(), scrape),
     {Host, Port} = dp_util:ddb_config(),
     C = dp_util:ddb_c(ddb_tcp:connect(Host,Port)),
-    C1 = dp_util:ddb_c(ddb_tcp:stream_mode(Bucket, 5, C)),
-
-    {ok, #state{bucket = Bucket, url = URL, freq = Freq, ddb = C1}}.
+    {ok, #{resolution := Res}, C1} = ddb_tcp:bucket_info(Bucket, C),
+    %% Prom data already arrives in 1s resolution.
+    Res1 = Res div 1000,
+    C2 = dp_util:ddb_c(ddb_tcp:stream_mode(Bucket, 5, C1)),
+    {ok, #state{bucket = Bucket, url = URL, freq = Freq, ddb = C2, res = Res1}}.
 
 %%--------------------------------------------------------------------
 %% @private
@@ -155,9 +160,9 @@ code_change(_OldVsn, State, _Extra) ->
 %%% Internal functions
 %%%===================================================================
 do_send(Decoded = #{time := Time, key := Key, value := Value},
-        State = #state{bucket = Bucket, ddb = C}) ->
+        State = #state{bucket = Bucket, ddb = C, res = R}) ->
     KeyBin = dproto:metric_from_list(Key),
     Points = mmath_bin:from_list([Value]),
-    C1 = dp_util:ddb_c(ddb_tcp:send(KeyBin, Time, Points, C)),
-    dp_index:add(Bucket, Decoded),
+    C1 = dp_util:ddb_c(ddb_tcp:send(KeyBin, Time div R, Points, C)),
+    dp_index:add(Bucket, Decoded, Time),
     State#state{ddb = C1}.
