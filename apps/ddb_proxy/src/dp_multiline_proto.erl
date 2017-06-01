@@ -31,7 +31,7 @@ send_metrics([#{ time := T} | _ ] = Ms, State = #{ddb := C, res := R}) ->
 send_metrics([M = #{time := Tin, key := Key, value := Value} | Ms],
              T, Acc, State = #{bucket := Bucket, res := R})
   when Tin div R =:= T ->
-    dp_index:add(Bucket, M, Tin),
+    dp_index:add(Bucket, M),
     KeyBin = dproto:metric_from_list(Key),
     Points = mmath_bin:from_list([Value]),
     send_metrics(Ms, T, [{KeyBin, Points} | Acc], State);
@@ -43,7 +43,7 @@ send_metrics([M = #{time := T, key := Key, value := Value} | Ms],
     C3 = dp_util:ddb_c(ddb_tcp:batch_start(T, C2)),
     KeyBin = dproto:metric_from_list(Key),
     Points = mmath_bin:from_list([Value]),
-    dp_index:add(Bucket, M, T),
+    dp_index:add(Bucket, M),
     send_metrics(Ms, T div R, [{KeyBin, Points}], State#{ddb => C3});
 send_metrics([], _, Acc, State = #{ddb := C}) ->
     %%lager:info("Batch size: ~p", [length(Acc)]),
