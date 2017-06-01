@@ -11,7 +11,7 @@
 -behaviour(gen_server).
 
 %% API
--export([start_link/0, add/3]).
+-export([start_link/0, add/2]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -21,10 +21,7 @@
 
 -define(SERVER, ?MODULE).
 
--record(state, {
-          seen = btrie:new(),
-          last_seen_update = 10*60 % 10m
-         }).
+-record(state, {seen = btrie:new()}).
 
 %%%===================================================================
 %%% API
@@ -36,16 +33,16 @@
 %%
 %% @spec start_link() -> {ok, Pid} | ignore | {error, Error}
 %% @end
-%%--------------------------------------------------------------------x
+%%--------------------------------------------------------------------
 start_link() ->
     gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
 
-add(Bucket, Metric, Time) ->
+add(Bucket, Metric) ->
     case erlang:process_info(whereis(?SERVER), message_queue_len) of
         {message_queue_len, N} when N > 100 ->
-            gen_server:call(?SERVER, {tags, Bucket, Metric, Time});
+            gen_server:call(?SERVER, {tags, Bucket, Metric});
         _ ->
-            gen_server:cast(?SERVER, {tags, Bucket, Metric, Time})
+            gen_server:cast(?SERVER, {tags, Bucket, Metric})
     end.
 
 %%%===================================================================
@@ -80,8 +77,8 @@ init([]) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_call({tags, Bucket, Metric, Time}, _From, State) ->
-    State1 = do_add(Bucket, Metric, Time, State),
+handle_call({tags, Bucket, Metric}, _From, State) ->
+    State1 = do_add(Bucket, Metric, State),
     {reply, ok, State1};
 handle_call(_Request, _From, State) ->
     Reply = ok,
@@ -97,8 +94,8 @@ handle_call(_Request, _From, State) ->
 %%                                  {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_cast({tags, Bucket, Metric, Time}, State) ->
-    State1 = do_add(Bucket, Metric, Time, State),
+handle_cast({tags, Bucket, Metric}, State) ->
+    State1 = do_add(Bucket, Metric, State),
     {noreply, State1};
 handle_cast(_Msg, State) ->
     {noreply, State}.
@@ -146,18 +143,15 @@ code_change(_OldVsn, State, _Extra) ->
 %%% Internal functions
 %%%===================================================================
 
-do_add(Bucket, Metric = #{key := Key}, Time, State = #state{seen = Seen, last_seen_update = TTL}) ->
+do_add(Bucket, Metric = #{key := Key}, State = #state{seen = Seen}) ->
     KeyBin = dproto:metric_from_list(Key),
     K = <<Bucket/binary, 0,  KeyBin/binary>>,
-    case btrie:find(K, Seen) of
-        {ok, Last} when Time - Last < TTL ->
+    case btrie:is_key(K, Seen) of
+        true ->
             State;
-        {ok, _Last} ->
-            dqe_idx:touch([{Bucket, Key, Time}]),
-            State#state{seen = btrie:store(K, Time, Seen)};
-        error ->
+        false ->
             #{metric := MetricParts, tags := Tags} =
                 dp_util:expand_tags(Metric),
-            dqe_idx:add(Bucket, MetricParts, Bucket, Key, Time, Tags),
-            State#state{seen = btrie:store(K, Time, Seen)}
+            dqe_idx:add(Bucket, MetricParts, Bucket, Key, Tags),
+            State#state{seen = btrie:store(K, Seen)}
     end.
