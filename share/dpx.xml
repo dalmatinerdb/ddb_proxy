@@ -51,6 +51,7 @@
 	<method_environment>
 	  <envvar name='PATH' value='/opt/local/gnu/bin:/opt/local/bin:/opt/local/sbin:/usr/bin:/usr/sbin'/>
 	  <envvar name='HOME' value='/data/dalmatinerpx'/>
+	  <envvar name='RUNNER_LOG_DIR' value='/data/dalmatinerpx/log'/>
 	</method_environment>
       </method_context>
     </exec_method>
@@ -65,6 +66,7 @@
 	<method_environment>
 	  <envvar name='PATH' value='/opt/local/gnu/bin:/opt/local/bin:/opt/local/sbin:/usr/bin:/usr/sbin'/>
 	  <envvar name='HOME' value='/data/dalmatinerpx'/>
+	  <envvar name='RUNNER_LOG_DIR' value='/data/dalmatinerpx/log'/>
 	</method_environment>
       </method_context>
     </exec_method>
@@ -79,6 +81,7 @@
 	<method_environment>
 	  <envvar name='PATH' value='/opt/local/gnu/bin:/opt/local/bin:/opt/local/sbin:/usr/bin:/usr/sbin'/>
 	  <envvar name='HOME' value='/data/dalmatinerpx'/>
+	  <envvar name='RUNNER_LOG_DIR' value='/data/dalmatinerpx/log'/>
 	</method_environment>
       </method_context>
     </exec_method>
