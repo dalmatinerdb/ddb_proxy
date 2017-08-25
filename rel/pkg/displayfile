@@ -5,7 +5,7 @@
 |                                                                              |
 | Please have a look at the configuration files:                               |
 |                                                                              |
-|  * /data/dalmatinerpx/etc/dalmatinerpx.conf                                  |
+|  * /data/dalmatinerpx/etc/dpx.conf                                           |
 |                                                                              |
 | Note: To enable Dalmatiner PX you first need to enable the epmd service.     |
 |                                                                              |
