@@ -1,5 +1,5 @@
 VERSION=0.3.3
-COMPONENT_INTERNAL=dalmatinerpx
+COMPONENT_INTERNAL=dpx
 COMPONENT=dalmatinerpx
 DEPS="erlang" "coreutils" "sudo"
 
