@@ -18,13 +18,13 @@ Requirements: As per the diagram you will need both DalmatinerDB and Postgres ru
 
 # Metric Listener Configuration
 
-Settings are configured in dalmatinerpx.conf
+Settings are configured in dpx.conf
 
 ## DQE Indexer backend
 
 Firstly, it is important to configure the dqe indexer module that you intend to use.
 
-For example, for the Postgres Indexer, configure your dalmatinerpx.conf as follows:
+For example, for the Postgres Indexer, configure your dpx.conf as follows:
 ```
 idx.backend = dqe_idx_pg
 ```
@@ -111,7 +111,7 @@ listeners.dp_otsdb.port = 4242
 
 # Log Listener Configuration
 
-Settings are configured in dalmatinerpx.conf 
+Settings are configured in dpx.conf 
 
 ## Syslog
 
