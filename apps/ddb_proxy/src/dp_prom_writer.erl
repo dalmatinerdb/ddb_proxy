@@ -17,7 +17,12 @@ protocol() ->
 
 unsnap(<<255,6,0,0, "sNaPpY", Data/binary>>) ->
     << << (unsnap_chunk(T, E))/binary >> ||
-        <<T, S:24/little-unsigned-integer, E:S/binary >> <= Data >>.
+        <<T, S:24/little-unsigned-integer, E:S/binary >> <= Data >>;
+
+unsnap(Compressed) ->
+    {ok, C} = snappiest:decompress(Compressed),
+    C.
+
 
 -define(SNAPPY_CHUNK, 16#00).
 -define(UNCOMPRESSED_CHUNK, 16#01).
