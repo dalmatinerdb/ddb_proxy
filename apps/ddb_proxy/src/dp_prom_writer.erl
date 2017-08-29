@@ -23,7 +23,6 @@ unsnap(Compressed) ->
     {ok, C} = snappiest:decompress(Compressed),
     C.
 
-
 -define(SNAPPY_CHUNK, 16#00).
 -define(UNCOMPRESSED_CHUNK, 16#01).
 -define(PADDING_CHUNK, 16#fe).
@@ -47,8 +46,6 @@ unsnap_chunk(T, _) when T >= ?SKIPPLE_START,
 unsnap_chunk(T, _) when T >= ?UNSKIPPLE_START,
                         T =< ?UNSKIPPLE_END ->
     error(badarg).
-
-
 
 decode(#'TimeSeries'{labels = Labels, samples = Samples}) ->
     Tags = lists:sort([decode_label(Label) || Label <- Labels]),
