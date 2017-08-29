@@ -40,7 +40,7 @@ case $2 in
         IP=`ifconfig net0 | grep inet | $AWK '{print $2}'`
 
         CONFFILE=/data/dalmatinerpx/etc/dpx.conf
-        cp /opt/local/dalmatinerpx/etc/dpx.conf.example ${CONFFILE}.example
+        cp /opt/local/dalmatinerpx/etc/dpx.conf ${CONFFILE}.example
 
         if [ ! -f "${CONFFILE}" ]
         then
