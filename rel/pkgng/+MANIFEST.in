@@ -1,0 +1,8 @@
+name: dalmatinerpx
+version: "__VNS__"
+origin: projectfifo/dalmatinerpx
+comment: "Dalmatiner TS Proxy"
+desc: "Dalmatiner TS Proxy"
+maintainer: info@project-fifo.net
+www: https://project-fifo.net
+prefix: /
