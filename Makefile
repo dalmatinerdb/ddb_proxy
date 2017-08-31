@@ -25,4 +25,7 @@ deb-package: deb-prepare
 package: rel
 	$(MAKE) -C rel/pkg package
 
+version_header:
+	true
+
 FORCE:
