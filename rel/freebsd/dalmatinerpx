@@ -1,0 +1,41 @@
+#!/bin/sh
+#
+# $FreeBSD$
+#
+
+# PROVIDE: dalmatinerpx
+# REQUIRE: LOGIN
+# KEYWORD: shutdown
+
+
+. /etc/rc.subr
+
+name="dalmatinerpx"
+rcvar=dalmatinerpx_enable
+
+load_rc_config $name
+: ${dalmatinerpx="NO"}
+
+
+start_cmd="${name}_start"
+stop_cmd="${name}_stop"
+
+
+
+dalmatinerpx_start()
+{
+	if checkyesno ${rcvar}; then
+		echo "* starting dalmatiner db... "
+		/usr/local/bin/sudo -u dalmatinerpx /usr/dpx/bin/dpx start
+	fi
+}
+
+dalmatinerpx_stop()
+{
+	if checkyesno ${rcvar}; then
+		echo "* stopping dalmatiner db... "
+		/usr/local/bin/sudo -u dalmatinerpx /usr/dpx/bin/dpx stop
+	fi
+}
+
+run_rc_command "$1"
